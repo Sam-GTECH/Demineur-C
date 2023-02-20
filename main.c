@@ -16,9 +16,9 @@ int main() {
     printf("The random number is %d!\n\n", r);
 
     int row, columns;
-    for (row=0; row<2; row++)
+    for (row=0; row<5; row++)
     {
-        for(columns=0; columns<2; columns++)
+        for(columns=0; columns<5; columns++)
         {
             printf("-%d-", matrice[row][columns]);
         }
