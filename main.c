@@ -3,7 +3,7 @@
 #include <locale.h>
 #include <wchar.h>
 
-int matrice[10][10];
+char matrice[10][10];
 int row, columns;
 
 void showMatrix() {
@@ -13,13 +13,13 @@ void showMatrix() {
     for (row = 0; row < 10; row++)
     {
         if (row  < 9)
-            printf(" %d | ", row+1 );
+            printf(" %d| ", row+1 );
         else
-            printf("%d | ", row+1 );
+            printf("%d| ", row+1 );
         
         for (columns = 0; columns < 10; columns++)
         {
-            printf("%d  ", matrice[row][columns] );
+            printf("%c  ", matrice[row][columns] );
         }
         printf("\n");
     }
@@ -35,9 +35,10 @@ int main() {
     {
         for(columns=0; columns<10; columns++)
         {
-            int r = rand() % ((1 - 0) + 1);
+            int randomR = rand()% 10;
+            int randomC = rand()% 10;
             //printf("The random number is %d!\n\n", r);
-            matrice[row][columns] = r;
+            matrice[randomR][randomC] = ' X';
         }
         //printf("\n");
     }
