@@ -5,6 +5,18 @@
 
 char matrice[10][10];
 int row, columns;
+int b;
+
+
+void randomBomb(){
+    srand(time(NULL));
+    for(b = 0; b < 10; b++){
+        int randomR = rand()% 10;
+        int randomC = rand()% 10;
+        matrice[randomR][randomC] = ' X';
+}
+
+}
 
 void showMatrix() {
     printf("  | 1  2  3  4  5  6  7  8  9  10\n");
@@ -19,7 +31,9 @@ void showMatrix() {
         
         for (columns = 0; columns < 10; columns++)
         {
-            printf("%c  ", matrice[row][columns] );
+            matrice[row][columns] = '-';
+            randomBomb();
+            printf("%c  ", matrice[row][columns]);
         }
         printf("\n");
     }
@@ -27,21 +41,6 @@ void showMatrix() {
 
 int main() {
     setlocale( LC_ALL, "fr-FR" );
-    srand(time(NULL));
-
-    int r = rand();
-    int r2 = rand()+r*50;
-    for (row=0; row<10; row++)
-    {
-        for(columns=0; columns<10; columns++)
-        {
-            int randomR = rand()% 10;
-            int randomC = rand()% 10;
-            //printf("The random number is %d!\n\n", r);
-            matrice[randomR][randomC] = ' X';
-        }
-        //printf("\n");
-    }
 
     printf("--- DEMINEUR C ---\n");
     printf("\n");
