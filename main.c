@@ -3,22 +3,42 @@
 #include <locale.h>
 #include <wchar.h>
 
-char matrice[10][10];
+char matrice[10][10]; // matrice "admin" avec les bombes affichées
+char Jeu[10][10]; // matrice joueur "caché"
 int row, columns;
 int b;
 
 
-void randomBomb(){
+void randomBomb(){ // générateur de 10 bombes de manières aléatoire
     srand(time(NULL));
     for(b = 0; b < 10; b++){
         int randomR = rand()% 10;
         int randomC = rand()% 10;
         matrice[randomR][randomC] = ' X';
+    }
 }
 
-}
+void showMatrix() { // affichage de la grille de jeu avec pour l'instant GRILLE ADMIN A SUPR !
+    printf("  | 1  2  3  4  5  6  7  8  9  10\n");
+    printf("  --------------------------------\n");
 
-void showMatrix() {
+    for (row = 0; row < 10; row++) // boucle pour les lignes
+    {
+        if (row  < 9) //si ligne < 9 alors écrire " | " et sauté une ligne
+            printf(" %d| ", row+1 );
+        else
+            printf("%d| ", row+1 ); // sinon écrire "| " et sauté une ligne
+        
+        for (columns = 0; columns < 10; columns++) // boucle pour les colonnes
+        {
+            Jeu[row][columns] = '-'; // place des "-" dans la matrice
+            randomBomb(); // utilise la fonction randomBomb
+            printf("%c  ", Jeu[row][columns]); // affiche la grille de jeu
+        }
+        printf("\n");
+    }
+    printf("  --------------------------------\n");
+    printf("\n");
     printf("  | 1  2  3  4  5  6  7  8  9  10\n");
     printf("  --------------------------------\n");
 
@@ -33,11 +53,12 @@ void showMatrix() {
         {
             matrice[row][columns] = '-';
             randomBomb();
-            printf("%c  ", matrice[row][columns]);
+            printf("%c  ", matrice[row][columns]); // affiche la grille admin 
         }
         printf("\n");
     }
 }
+
 
 int main() {
     setlocale( LC_ALL, "fr-FR" );
