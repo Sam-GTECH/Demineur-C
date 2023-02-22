@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <locale.h>
 #include <wchar.h>
+#include <stdlib.h>
 
 char matrice[10][10];
 int row, columns;
@@ -23,6 +24,35 @@ void showMatrix() {
         }
         printf("\n");
     }
+}
+
+void checkNearbyCases(int r, int c){
+    int top          = -1;
+    int top_right    = -1;
+    int top_left     = -1;
+    int bottom       = -1;
+    int bottom_right = -1;
+    int bottom_left  = -1;
+    int right        = -1;
+    int left         = -1;
+    if (c>0) {
+        top = matrice[r][c-1];
+        if (r<10)
+            top_right = matrice[r+1][c-1];
+        if (r>0)
+            top_left = matrice[r-1][c-1];
+    }
+    if (c<10) {
+        bottom = matrice[r][c+1];
+        if (r<10)
+            bottom_right = matrice[r+1][c+1];
+        if (r>0)
+            bottom_left = matrice[r-1][c+1];
+    }
+    if (r>0)
+        right = matrice[r-1][c];
+    if (r<10)
+        left = matrice[r+1][c];
 }
 
 int main() {
@@ -53,6 +83,7 @@ int main() {
     int action = -1;
     int flagCase = 0;
     while (1){
+        system("cls");
         showMatrix();
         while (verif==0){
             printf("Sélectionnez le numéro de la ligne et de la colonne que vous voulez modifier: ");
@@ -65,7 +96,7 @@ int main() {
             }
         }
 
-        if (matrice[selectRow][selectCol]==2)
+        if (matrice[selectRow][selectCol]==3)
             flagCase = 1;
 
         printf("Case (%d-%d) sélectionné.\n\n", selectRow, selectCol);
@@ -79,25 +110,33 @@ int main() {
             printf("\n[%d]\n", verif);
             if (verif==0) // si scanf n'a pas retourné 1, alors l'utilisateur n'a pas retourné un integer
                 scanf("%*[^\n]"); //Je sais pas comment ça marche mais ça enlève la mauvaise valeur du buffer, empêchant une boucle infinie
-            if ((!flagCase && action<1 || action>3) || (flagCase && action<1 || action>2)){
+            if (action<1 || action>3){
                 printf("%d n'est pas un choix valide.\n\n", action);
                 action = -1;
             }
         }
+
+        selectRow -= 1;
+        selectCol -= 1;
+
         if (action==1){
-            if (matrice[selectRow][selectRow] == 1) {
+            if (matrice[selectRow][selectCol] == 1) {
                 printf("BOOM!\nIl y avait une bombe, c'est perdu!\n");
                 break;
             } else if (matrice[selectRow][selectCol] == 0) {
-                matrice[selectRow][selectCol] = 3;
+                matrice[selectRow][selectCol] = 2;
+                checkNearbyCases(selectRow, selectCol);
             }
         } else if (action==2) {
-            printf("yes");
+            matrice[selectRow][selectCol] = 3;
+        } else if (action==3) {
+            
         }
         verif = 0;
         selectRow = 0;
         selectCol = 0;
         flagCase = 0;
+        action = -1;
     }
 
     return 0;
