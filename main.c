@@ -74,6 +74,7 @@ void checkNearbyCases(int r, int c){
     int i, j;
     int bombFound = 0;
     char aroundCase;
+    int right, left;
     for (i = 0; i < 9; i++)
     {
         if (aroundCases[i][1]<0 || aroundCases[i][1]>10)
@@ -127,6 +128,7 @@ int main()
     int verif = 0;
     int action = -1;
     int flagCase = 0;
+    int choix;
     while (1){
         system("cls");
         showMatrix();
