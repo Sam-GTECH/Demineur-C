@@ -152,7 +152,7 @@ int main()
         printf("Case (%d-%d) sélectionné.\n\n", selectRow+1, selectCol+1);
         while (action == -1)
         {
-            if (flagCase)
+            if (flagCase == 1)
             {
                 printf("Que faire?\n1-Enlever un drapeau\n2-Changer de case\nChoix:");
                 scanf("%d", &choix);
@@ -170,8 +170,12 @@ int main()
                 }
                 else if(choix == 2)
                 {
-                    Jeu[selectRow][selectCol] = printf("%d", flagCase);
+                    if(flagCase == 1)
+                        Jeu[selectRow][selectCol] = printf("%d", flagCase);
+                    else
+                        Jeu[selectRow][selectCol] = printf("%d *", flagCase); // à changer pour supprimer le drapeau posé
                     showMatrix();
+
                 }
             }
             verif = scanf("%d", &action);
