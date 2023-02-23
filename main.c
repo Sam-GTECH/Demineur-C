@@ -57,32 +57,42 @@ void showMatrix() { // affichage de la grille de jeu avec pour l'instant GRILLE 
 }
 
 void checkNearbyCases(int r, int c){
-    int top          = -1;
-    int top_right    = -1;
-    int top_left     = -1;
-    int bottom       = -1;
-    int bottom_right = -1;
-    int bottom_left  = -1;
-    int right        = -1;
-    int left         = -1;
-    if (c>0) {
-        top = matrice[r][c-1];
-        if (r<10)
-            top_right = matrice[r+1][c-1];
-        if (r>0)
-            top_left = matrice[r-1][c-1];
+    printf("---Called checkNerbyCases function with %d-%d---\n", r, c);
+    int aroundCases[9][2] = {
+        {r   , c-1}, //top
+        {r+1 , c-1}, //top right
+        {r-1 , c-1}, //top left
+        {r   , c+1}, //bottom
+        {r+1 , c-1}, //bottom right
+        {r-1 , c-1}, //bottom left
+        {r+1 , c  }, //left
+        {r-1 , c  }, //right
+    };
+
+    int i, j;
+    int bombFound = 0;
+    char aroundCase;
+    for (i = 0; i < 9; i++)
+    {
+        if (aroundCases[i][1]<0 || aroundCases[i][1]>10)
+            continue;
+        if (aroundCases[i][2]<0 || aroundCases[i][2]>10)
+            continue;
+        aroundCase = matrice[aroundCases[i][1]][aroundCases[i][2]];
+        printf("La case en %d-%d est %c!\n", aroundCases[i][1]+1, aroundCases[i][2]+1, aroundCase);
+        if (aroundCase == 'X')
+            bombFound++;
+        else if (aroundCase == '-'){
+            Jeu[aroundCases[i][1]][aroundCases[i][2]] = 'O';
+            matrice[aroundCases[i][1]][aroundCases[i][2]] = 'O';
+            if (bombFound==0)
+                checkNearbyCases(aroundCases[i][1], aroundCases[i][2]);
+        }
     }
-    if (c<10) {
-        bottom = matrice[r][c+1];
-        if (r<10)
-            bottom_right = matrice[r+1][c+1];
-        if (r>0)
-            bottom_left = matrice[r-1][c+1];
-    }
-    if (r>0)
-        right = matrice[r-1][c];
-    if (r<10)
-        left = matrice[r+1][c];
+    printf("Final bombs: %d", bombFound);
+    char bombAround = bombFound + '0';
+    if (bombFound!=0)
+        Jeu[r][c] = bombAround;
 }
 
 
@@ -116,7 +126,7 @@ int main() {
     int action = -1;
     int flagCase = 0;
     while (1){
-        system("cls");
+        //system("cls");
         showMatrix();
         while (verif==0){
             printf("Sélectionnez le numéro de la ligne et de la colonne que vous voulez modifier: ");
@@ -160,11 +170,12 @@ int main() {
         selectCol -= 1;
 
         if (action==1){
-            if (matrice[selectRow][selectCol] == 1) {
+            if (matrice[selectRow][selectCol] == 'X') {
                 printf("BOOM!\nIl y avait une bombe, c'est perdu!\n");
                 break;
-            } else if (matrice[selectRow][selectCol] == 0) {
-                matrice[selectRow][selectCol] = 2;
+            } else if (matrice[selectRow][selectCol] == '-') {
+                printf("It's a good one!");
+                matrice[selectRow][selectCol] = 'O';
                 checkNearbyCases(selectRow, selectCol);
             }
         } else if (action==2) {
