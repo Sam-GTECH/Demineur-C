@@ -125,7 +125,14 @@ int main() {
                 printf("Que faire?\n1-Enlever un drapeau\n2-Changer de case\nChoix:");
             } else {
                 printf("Que faire?\n1-Déminer\n2-Poser un drapeau\n3-Changer de case\nChoix:");
-            }
+            // while(printf == 1){
+            //     for (selectRow = 0; selectRow < 10; selectRow++)
+            //         for (selectCol = 0; selectCol < 10; selectCol++)
+            //             scanf("%d", &matrice[selectRow][selectCol]);
+            //             matrice[selectRow][selectCol] = Jeu[selectRow][selectCol];
+            //             printf("%d", Jeu[selectRow][selectCol]);
+            // }
+        }
             verif = scanf("%d", &action);
             printf("\n[%d]\n", verif);
             if (verif==0) // si scanf n'a pas retourné 1, alors l'utilisateur n'a pas retourné un integer
