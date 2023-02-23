@@ -32,8 +32,6 @@ void showMatrix() { // affichage de la grille de jeu avec pour l'instant GRILLE 
         
         for (columns = 0; columns < 10; columns++) // boucle pour les colonnes
         {
-            Jeu[row][columns] = '-'; // place des "-" dans la matrice
-            randomBomb(); // utilise la fonction randomBomb
             printf("%c  ", Jeu[row][columns]); // affiche la grille de jeu
         }
         printf("\n");
@@ -52,8 +50,6 @@ void showMatrix() { // affichage de la grille de jeu avec pour l'instant GRILLE 
         
         for (columns = 0; columns < 10; columns++)
         {
-            matrice[row][columns] = '-';
-            randomBomb();
             printf("%c  ", matrice[row][columns]); // affiche la grille admin 
         }
         printf("\n");
@@ -92,6 +88,23 @@ void checkNearbyCases(int r, int c){
 
 int main() {
     setlocale( LC_ALL, "fr-FR" );
+
+    for (row = 0; row < 10; row++)
+    {
+        for (columns = 0; columns < 10; columns++)
+        {
+            matrice[row][columns] = '-';
+            randomBomb();
+        }
+    }
+    randomBomb();
+    for (row = 0; row < 10; row++)
+    {
+        for (columns = 0; columns < 10; columns++)
+        {
+            Jeu[row][columns] = '-';
+        }
+    }
 
     printf("--- DEMINEUR C ---\n");
     printf("\n");
