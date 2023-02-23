@@ -128,7 +128,7 @@ int main()
     int verif = 0;
     int action = -1;
     int flagCase = 0;
-    int choix;
+    int choix = 0;
     while (1){
         system("cls");
         showMatrix();
@@ -167,6 +167,11 @@ int main()
                     showMatrix();
 
 
+                }
+                else if(choix == 2)
+                {
+                    Jeu[selectRow][selectCol] = printf("%d", flagCase);
+                    showMatrix();
                 }
             }
             verif = scanf("%d", &action);
