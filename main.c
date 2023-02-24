@@ -139,7 +139,8 @@ int main()
 
             if (verif < 2)
             {
-                printf("Une des valeurs données n'est pas valide!");
+                scanf("%*[^\n]");
+                printf("Une des valeurs données n'est pas valide!\n\n");
                 verif = 0;
             }
         }
