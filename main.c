@@ -20,7 +20,7 @@ void randomBomb()
     }
 }
 
-void showMatrix()
+void showJeu()
 { // affichage de la grille de jeu avec pour l'instant GRILLE ADMIN A SUPR !
     printf("  | 1  2  3  4  5  6  7  8  9  10\n");
     printf("  --------------------------------\n");
@@ -40,7 +40,12 @@ void showMatrix()
     }
     printf("  --------------------------------\n");
     printf("\n");
-    printf("  | 1  2  3  4  5  6  7  8  9  10\n");
+
+}
+
+void showMatrix()
+{
+        printf("  | 1  2  3  4  5  6  7  8  9  10\n");
     printf("  --------------------------------\n");
 
     for (row = 0; row < 10; row++)
@@ -58,49 +63,44 @@ void showMatrix()
     }
 }
 
-void revealCases(int r, int c){
-    printf("\n---Called revealCases function with %d-%d---\n", r, c);
-    int aroundCases[8][2] = {
+void checkNearbyCases(int r, int c){
+    printf("---Called checkNerbyCases function with %d-%d---\n", r, c);
+    int aroundCases[9][2] = {
         {r   , c-1}, //top
-        {r+1 , c-1}, //top-right
-        {r+1 , c  }, //right
-        {r+1 , c+1}, //bottom-right
+        {r+1 , c-1}, //top right
+        {r-1 , c-1}, //top left
         {r   , c+1}, //bottom
-        {r-1 , c+1}, //bottom-left
-        {r-1 , c  }, //left
-        {r-1 , c-1}, //top-left
+        {r+1 , c-1}, //bottom right
+        {r-1 , c-1}, //bottom left
+        {r+1 , c  }, //left
+        {r-1 , c  }, //right
     };
 
-    if (Jeu[r][c]==matrice[r][c]){
-        printf("\n[Already checked, center is %c bye]\n", Jeu[r][c]);
-        return;
-    }
-    
-    int i = 0;
-    int currentCase;
-    int bombNumber = 0;
-    for (i = 0; i < 8; i++)
+    int i, j;
+    int bombFound = 0;
+    char aroundCase;
+    int right, left;
+    for (i = 0; i < 9; i++)
     {
-        printf("loop for %d, checking pos %d-%d:\n", i, aroundCases[i][0], aroundCases[i][1]);
-        if (aroundCases[i][0]<0 || aroundCases[i][0]>10)
-            continue;
         if (aroundCases[i][1]<0 || aroundCases[i][1]>10)
             continue;
-        printf("You pass\n");
-        currentCase = matrice[aroundCases[i][0]][aroundCases[i][1]];
-        printf("ery nice mate.\n");
-        if (currentCase=='X') {
-            printf("bomb, you want it? -Morshu\n");
-            bombNumber++;
+        if (aroundCases[i][2]<0 || aroundCases[i][2]>10)
             continue;
+        aroundCase = matrice[aroundCases[i][1]][aroundCases[i][2]];
+        printf("La case en %d-%d est %c!\n", aroundCases[i][1]+1, aroundCases[i][2]+1, aroundCase);
+        if (aroundCase == 'X')
+            bombFound++;
+        else if (aroundCase == '-'){
+            Jeu[aroundCases[i][1]][aroundCases[i][2]] = 'O';
+            matrice[aroundCases[i][1]][aroundCases[i][2]] = 'O';
+            if (bombFound==0)
+                checkNearbyCases(aroundCases[i][1], aroundCases[i][2]);
         }
-        //revealCases(aroundCases[i][0], aroundCases[i][1]);
-        printf("\n");
     }
-    if (bombNumber==0)
-        Jeu[r][c]=matrice[r][c];
-    else
-        Jeu[r][c]=bombNumber + '0';
+    if (r>0)
+        right = matrice[r-1][c];
+    if (r<10)
+        left = matrice[r+1][c];
 }
 
 int main()
@@ -131,16 +131,16 @@ int main()
 
     int selectRow, selectCol;
     int verif = 0;
-    int flagCase = 0;
-    int choix = -1;
+    int action = -1;
+    int choix = 0;
     while (1){
         system("cls");
+        showJeu();
         showMatrix();
         while (verif == 0)
         {
             printf("Sélectionnez le numéro de la ligne et de la colonne que vous voulez modifier: ");
             verif = scanf("%d %d", &selectRow, &selectCol);
-            printf("\n[%d]\n", verif);
 
             if (verif < 2)
             {
@@ -149,55 +149,74 @@ int main()
                 verif = 0;
             }
         }
-
-        selectRow -= 1;
-        selectCol -= 1;
-
-        if (Jeu[selectRow][selectCol] == 3)
-            flagCase = 1;
+            selectRow -= 1;
+            selectCol -= 1;
 
         printf("Case (%d-%d) sélectionné.\n\n", selectRow+1, selectCol+1);
-        while (choix == -1)
+        while (action == -1)
         {
-            if (flagCase == 1)
+            if (Jeu[selectRow][selectCol] == 'P')
             {
                 printf("Que faire?\n1-Enlever un drapeau\n2-Changer de case\nChoix:");
-                scanf("%d", &choix);
+                scanf("%d", &action);
+                if (action == 1)
+                {
+                    Jeu[selectRow][selectCol] = 0 ; // supprimer le drapeau posé si il y a un drapeau
+                    showJeu();
+                    showMatrix();
+                }
+                else
+                { 
+                    verif = 0; // renvoie au choix d'une case
+                }
             }
-            else
+            else if (Jeu[selectRow][selectCol] != 'P')
             {
                 printf("Que faire?\n1-Déminer\n2-Poser un drapeau\n3-Changer de case\nChoix:");
-                verif = scanf("%d", &choix);
-                if (verif == 0)       // si scanf n'a pas retourné 1, alors l'utilisateur n'a pas retourné un integer
-                    scanf("%*[^\n]"); // Je sais pas comment ça marche mais ça enlève la mauvaise valeur du buffer, empêchant une boucle infinie
-                if (choix == 1)
+                scanf("%d", &action);
+                if (action == 1) // si choix est 1 déminer
                 {
-                    revealCases(selectRow, selectCol);
-
-
-                }
-                else if(choix == 2)
-                {
-                    if(flagCase == 1)
-                        Jeu[selectRow][selectCol] = printf("%d", flagCase);
-                    else
-                        Jeu[selectRow][selectCol] = printf("%d *", flagCase); // à changer pour supprimer le drapeau posé
+                    Jeu[selectRow][selectCol] = matrice[selectRow][selectCol];
+                    showJeu();
                     showMatrix();
 
+
                 }
-                else if (choix == 3)
-                    break;
-                else {
-                    printf("Choix invalide.");
-                    choix = -1;
+                else if(action == 2)    //si choix est 2 poser drapeau
+                    {  
+                        Jeu[selectRow][selectCol] = 'P';
+                    }
+                else if(action == 3)
+                {
+                    verif = 0;
                 }
+            }
+
+            // verif = scanf("%d", &action);
+            // printf("\n[%d]\n", verif);
+            // if (verif == 0)       // si scanf n'a pas retourné 1, alors l'utilisateur n'a pas retourné un integer
+            //     scanf("%*[^\n]"); // Je sais pas comment ça marche mais ça enlève la mauvaise valeur du buffer, empêchant une boucle infinie
+            if (action < 1 || action > 3)
+            {
+                printf("%d n'est pas un choix valide.\n\n", action);
+                action = -1;
+            }
+        }
+
+
+        if (action==1){
+            if (matrice[selectRow][selectCol] == 1) {
+                printf("BOOM!\nIl y avait une bombe, c'est perdu!\n");
+                break;
+            } else if (matrice[selectRow][selectCol] == 0) {
+                matrice[selectRow][selectCol] = 2;
+                checkNearbyCases(selectRow, selectCol);
             }
         }
         verif = 0;
         selectRow = 0;
         selectCol = 0;
-        flagCase = 0;
-        choix = -1;
+        action = -1;
     }
 
     return 0;
