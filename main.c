@@ -20,7 +20,7 @@ void randomBomb()
     }
 }
 
-void showMatrix()
+void showJeu()
 { // affichage de la grille de jeu avec pour l'instant GRILLE ADMIN A SUPR !
     printf("  | 1  2  3  4  5  6  7  8  9  10\n");
     printf("  --------------------------------\n");
@@ -40,7 +40,12 @@ void showMatrix()
     }
     printf("  --------------------------------\n");
     printf("\n");
-    printf("  | 1  2  3  4  5  6  7  8  9  10\n");
+
+}
+
+void showMatrix()
+{
+        printf("  | 1  2  3  4  5  6  7  8  9  10\n");
     printf("  --------------------------------\n");
 
     for (row = 0; row < 10; row++)
@@ -127,16 +132,15 @@ int main()
     int selectRow, selectCol;
     int verif = 0;
     int action = -1;
-    int flagCase = 0;
     int choix = 0;
     while (1){
         system("cls");
+        showJeu();
         showMatrix();
         while (verif == 0)
         {
             printf("Sélectionnez le numéro de la ligne et de la colonne que vous voulez modifier: ");
             verif = scanf("%d %d", &selectRow, &selectCol);
-            printf("\n[%d]\n", verif);
 
             if (verif < 2)
             {
@@ -146,42 +150,51 @@ int main()
         }
             selectRow -= 1;
             selectCol -= 1;
-        if (Jeu[selectRow][selectCol] == 3)
-            flagCase = 1;
 
         printf("Case (%d-%d) sélectionné.\n\n", selectRow+1, selectCol+1);
         while (action == -1)
         {
-            if (flagCase == 1)
+            if (Jeu[selectRow][selectCol] == 'P')
             {
                 printf("Que faire?\n1-Enlever un drapeau\n2-Changer de case\nChoix:");
-                scanf("%d", &choix);
+                scanf("%d", &action);
+                if (action == 1)
+                {
+                    Jeu[selectRow][selectCol] = 0 ; // supprimer le drapeau posé si il y a un drapeau
+                    showJeu();
+                    showMatrix();
+                }
+                else
+                { 
+                    verif = 0; // renvoie au choix d'une case
+                }
             }
-            else
+            else if (Jeu[selectRow][selectCol] != 'P')
             {
                 printf("Que faire?\n1-Déminer\n2-Poser un drapeau\n3-Changer de case\nChoix:");
-                scanf("%d", &choix);
-                if (choix == 1)
+                scanf("%d", &action);
+                if (action == 1) // si choix est 1 déminer
                 {
                     Jeu[selectRow][selectCol] = matrice[selectRow][selectCol];
+                    showJeu();
                     showMatrix();
 
 
                 }
-                else if(choix == 2)
+                else if(action == 2)    //si choix est 2 poser drapeau
+                    {  
+                        Jeu[selectRow][selectCol] = 'P';
+                    }
+                else if(action == 3)
                 {
-                    if(flagCase == 1)
-                        Jeu[selectRow][selectCol] = printf("%d", flagCase);
-                    else
-                        Jeu[selectRow][selectCol] = printf("%d *", flagCase); // à changer pour supprimer le drapeau posé
-                    showMatrix();
-
+                    verif = 0;
                 }
             }
-            verif = scanf("%d", &action);
-            printf("\n[%d]\n", verif);
-            if (verif == 0)       // si scanf n'a pas retourné 1, alors l'utilisateur n'a pas retourné un integer
-                scanf("%*[^\n]"); // Je sais pas comment ça marche mais ça enlève la mauvaise valeur du buffer, empêchant une boucle infinie
+
+            // verif = scanf("%d", &action);
+            // printf("\n[%d]\n", verif);
+            // if (verif == 0)       // si scanf n'a pas retourné 1, alors l'utilisateur n'a pas retourné un integer
+            //     scanf("%*[^\n]"); // Je sais pas comment ça marche mais ça enlève la mauvaise valeur du buffer, empêchant une boucle infinie
             if (action < 1 || action > 3)
             {
                 printf("%d n'est pas un choix valide.\n\n", action);
@@ -209,7 +222,6 @@ int main()
         verif = 0;
         selectRow = 0;
         selectCol = 0;
-        flagCase = 0;
         action = -1;
     }
 
