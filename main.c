@@ -144,7 +144,8 @@ int main()
 
             if (verif < 2)
             {
-                printf("Une des valeurs données n'est pas valide!");
+                scanf("%*[^\n]");
+                printf("Une des valeurs données n'est pas valide!\n\n");
                 verif = 0;
             }
         }
@@ -152,7 +153,7 @@ int main()
             selectCol -= 1;
 
         printf("Case (%d-%d) sélectionné.\n\n", selectRow+1, selectCol+1);
-        while (action == -1)
+        while (choix == -1)
         {
             if (Jeu[selectRow][selectCol] == 'P')
             {
@@ -211,13 +212,6 @@ int main()
                 matrice[selectRow][selectCol] = 2;
                 checkNearbyCases(selectRow, selectCol);
             }
-        }
-        else if (action == 2)
-        {
-            matrice[selectRow][selectCol] = 3;
-        }
-        else if (action == 3)
-        {
         }
         verif = 0;
         selectRow = 0;
