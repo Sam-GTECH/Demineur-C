@@ -210,8 +210,10 @@ int main()
             /*  else if (matrice[selectRow][selectCol] == 0) {
                 matrice[selectRow][selectCol] = 2;
                 checkNearbyCases(selectRow, selectCol); */
-            else if (Jeu[Row][Col] == 'P' + '*' == 10)
-        }
+            else if
+            {
+
+            }
     }
 
 
