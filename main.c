@@ -58,44 +58,49 @@ void showMatrix()
     }
 }
 
-void checkNearbyCases(int r, int c){
-    printf("---Called checkNerbyCases function with %d-%d---\n", r, c);
-    int aroundCases[9][2] = {
+void revealCases(int r, int c){
+    printf("\n---Called revealCases function with %d-%d---\n", r, c);
+    int aroundCases[8][2] = {
         {r   , c-1}, //top
-        {r+1 , c-1}, //top right
-        {r-1 , c-1}, //top left
+        {r+1 , c-1}, //top-right
+        {r+1 , c  }, //right
+        {r+1 , c+1}, //bottom-right
         {r   , c+1}, //bottom
-        {r+1 , c-1}, //bottom right
-        {r-1 , c-1}, //bottom left
-        {r+1 , c  }, //left
-        {r-1 , c  }, //right
+        {r-1 , c+1}, //bottom-left
+        {r-1 , c  }, //left
+        {r-1 , c-1}, //top-left
     };
 
-    int i, j;
-    int bombFound = 0;
-    char aroundCase;
-    int right, left;
-    for (i = 0; i < 9; i++)
+    if (Jeu[r][c]==matrice[r][c]){
+        printf("\n[Already checked, center is %c bye]\n", Jeu[r][c]);
+        return;
+    }
+    
+    int i = 0;
+    int currentCase;
+    int bombNumber = 0;
+    for (i = 0; i < 8; i++)
     {
+        printf("loop for %d, checking pos %d-%d:\n", i, aroundCases[i][0], aroundCases[i][1]);
+        if (aroundCases[i][0]<0 || aroundCases[i][0]>10)
+            continue;
         if (aroundCases[i][1]<0 || aroundCases[i][1]>10)
             continue;
-        if (aroundCases[i][2]<0 || aroundCases[i][2]>10)
+        printf("You pass\n");
+        currentCase = matrice[aroundCases[i][0]][aroundCases[i][1]];
+        printf("ery nice mate.\n");
+        if (currentCase=='X') {
+            printf("bomb, you want it? -Morshu\n");
+            bombNumber++;
             continue;
-        aroundCase = matrice[aroundCases[i][1]][aroundCases[i][2]];
-        printf("La case en %d-%d est %c!\n", aroundCases[i][1]+1, aroundCases[i][2]+1, aroundCase);
-        if (aroundCase == 'X')
-            bombFound++;
-        else if (aroundCase == '-'){
-            Jeu[aroundCases[i][1]][aroundCases[i][2]] = 'O';
-            matrice[aroundCases[i][1]][aroundCases[i][2]] = 'O';
-            if (bombFound==0)
-                checkNearbyCases(aroundCases[i][1], aroundCases[i][2]);
         }
+        revealCases(aroundCases[i][0], aroundCases[i][1]);
+        printf("\n");
     }
-    if (r>0)
-        right = matrice[r-1][c];
-    if (r<10)
-        left = matrice[r+1][c];
+    if (bombNumber==0)
+        Jeu[r][c]=matrice[r][c];
+    else
+        Jeu[r][c]=bombNumber + '0';
 }
 
 int main()
@@ -167,9 +172,7 @@ int main()
                     scanf("%*[^\n]"); // Je sais pas comment ça marche mais ça enlève la mauvaise valeur du buffer, empêchant une boucle infinie
                 if (choix == 1)
                 {
-                    Jeu[selectRow][selectCol] = matrice[selectRow][selectCol];
-                    //checkNearbyCases(selectRow, selectCol);
-                    showMatrix();
+                    revealCases(selectRow, selectCol);
 
 
                 }
