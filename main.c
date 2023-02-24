@@ -45,7 +45,7 @@ void showJeu()
 
 void showMatrix()
 {
-        printf("  | 1  2  3  4  5  6  7  8  9  10\n");
+    printf("  | 1  2  3  4  5  6  7  8  9  10\n");
     printf("  --------------------------------\n");
 
     for (row = 0; row < 10; row++)
@@ -64,17 +64,17 @@ void showMatrix()
 }
 
 //Fuck this shit
-void checkNearbyCases(int r, int c){
+void checkNearbyCases(int r, int c) {
     printf("---Called checkNerbyCases function with %d-%d---\n", r, c);
     int aroundCases[8][2] = {
-        {r   , c-1}, //top
-        {r+1 , c-1}, //top right
-        {r-1 , c  }, //right
-        {r+1 , c+1}, //bottom right
-        {r   , c-1}, //bottom
-        {r-1 , c-1}, //bottom left
-        {r+1 , c  }, //left
-        {r+1 , c-1}, //top left
+        {r   , c - 1}, //top
+        {r + 1 , c - 1}, //top right
+        {r - 1 , c  }, //right
+        {r + 1 , c + 1}, //bottom right
+        {r   , c - 1}, //bottom
+        {r - 1 , c - 1}, //bottom left
+        {r + 1 , c  }, //left
+        {r + 1 , c - 1}, //top left
     };
 
     int i;
@@ -82,12 +82,12 @@ void checkNearbyCases(int r, int c){
     for (i = 0; i < 8; i++)
     {
         printf("\n[Cheking case %d-%d of value %c]\n", aroundCases[i][0], aroundCases[i][1], matrice[aroundCases[i][0]][aroundCases[i][1]]);
-        if (aroundCases[i][0]<0 || aroundCases[i][1]>9)
-            continue;   
-        if (aroundCases[i][0]<0 || aroundCases[i][1]>9)
+        if (aroundCases[i][0] < 0 || aroundCases[i][1]>9)
+            continue;
+        if (aroundCases[i][0] < 0 || aroundCases[i][1]>9)
             continue;
         printf("[yes]\n");
-        if (matrice[aroundCases[i][0]][aroundCases[i][1]] == 'X'){
+        if (matrice[aroundCases[i][0]][aroundCases[i][1]] == 'X') {
             bombFound++;
             printf("bomb? you want it? -Morshu");
             continue;
@@ -95,7 +95,7 @@ void checkNearbyCases(int r, int c){
         Jeu[aroundCases[i][0]][aroundCases[i][1]] = matrice[aroundCases[i][0]][aroundCases[i][1]];
     }
 
-    if (bombFound==0)
+    if (bombFound == 0)
         Jeu[r][c] = matrice[r][c];
     else
         Jeu[r][c] = bombFound + '0';
@@ -124,55 +124,54 @@ int main()
 
     printf("--- DEMINEUR C ---\n");
     printf("\n");
-    printf("Bienvenue! Appuyer sur n'importe quel touche pour commencer une partie de démineur\n");
+    printf("Bienvenue! Appuyer sur n'importe quel touche pour commencer une partie de demineur\n");
     getchar();
 
     int selectRow, selectCol;
     int verif = 0;
     int action = -1;
     int choix = 0;
-    while (1){
+    while (1) {
         system("cls");
         showJeu();
         showMatrix();
         while (verif == 0)
         {
-            printf("Sélectionnez le numéro de la ligne et de la colonne que vous voulez modifier: ");
-            verif = scanf("%d %d", &selectRow, &selectCol);
+            printf("Selectionnez le numero de la ligne et de la colonne que vous voulez modifier: ");
+            verif = scanf_s("%d %d", &selectRow, &selectCol);
 
             if (verif < 2)
             {
-                scanf("%*[^\n]");
-                printf("Une des valeurs données n'est pas valide!\n\n");
+                scanf_s("%*[^\n]");
+                printf("Une des valeurs donnees n'est pas valide!\n\n");
                 verif = 0;
             }
         }
-            selectRow -= 1;
-            selectCol -= 1;
+        selectRow -= 1;
+        selectCol -= 1;
 
-        printf("Case (%d-%d) sélectionné.\n\n", selectRow+1, selectCol+1);
+        printf("Case (%d-%d) selectionne.\n\n", selectRow + 1, selectCol + 1);
         while (action == -1)
         {
             if (Jeu[selectRow][selectCol] == 'P')
             {
                 printf("Que faire?\n1-Enlever un drapeau\n2-Changer de case\nChoix:");
-                scanf("%d", &action);
+                scanf_s("%d", &action);
                 if (action == 1)
                 {
-                    Jeu[selectRow][selectCol] = 0 ; // supprimer le drapeau posé si il y a un drapeau
-                    Jeu[selectRow][selectCol] = "*";
+                    Jeu[selectRow][selectCol] = '*'; // supprimer le drapeau posé si il y a un drapeau
                     showJeu();
                     showMatrix();
                 }
                 else
-                { 
+                {
                     verif = 0; // renvoie au choix d'une case
                 }
             }
             else if (Jeu[selectRow][selectCol] != 'P')
             {
-                printf("Que faire?\n1-Déminer\n2-Poser un drapeau\n3-Changer de case\nChoix:");
-                scanf("%d", &action);
+                printf("Que faire?\n1-Deminer\n2-Poser un drapeau\n3-Changer de case\nChoix:");
+                scanf_s("%d", &action);
                 if (action == 1) // si choix est 1 déminer
                 {
                     checkNearbyCases(selectRow, selectCol);
@@ -181,11 +180,11 @@ int main()
 
 
                 }
-                else if(action == 2)    //si choix est 2 poser drapeau
-                    {  
-                        Jeu[selectRow][selectCol] = 'P';
-                    }
-                else if(action == 3)
+                else if (action == 2)    //si choix est 2 poser drapeau
+                {
+                    Jeu[selectRow][selectCol] = 'P';
+                }
+                else if (action == 3)
                 {
                     verif = 0;
                 }
@@ -203,20 +202,24 @@ int main()
         }
 
 
-        if (action==1){
-            if (matrice[selectRow][selectCol] == 1) {
+        if (action == 1) {
+            if (matrice[selectRow][selectCol] == 'X') {
                 printf("BOOM!\nIl y avait une bombe, c'est perdu!\n");
                 break;
-            } else if (matrice[selectRow][selectCol] == 0) {
-                matrice[selectRow][selectCol] = 2;
-                checkNearbyCases(selectRow, selectCol);
             }
+            /*  else if (matrice[selectRow][selectCol] == 0) {
+                matrice[selectRow][selectCol] = 2;
+                checkNearbyCases(selectRow, selectCol); */
+            else if (Jeu[Row][Col] == 'P' + '*' == 10)
         }
-        verif = 0;
-        selectRow = 0;
-        selectCol = 0;
-        action = -1;
     }
 
-    return 0;
+
+    verif = 0;
+    selectRow = 0;
+    selectCol = 0;
+    action = -1;
+}
+
+return 0;
 }
