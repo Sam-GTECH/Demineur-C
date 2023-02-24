@@ -160,6 +160,7 @@ int main()
                 if (action == 1)
                 {
                     Jeu[selectRow][selectCol] = 0 ; // supprimer le drapeau posé si il y a un drapeau
+                    Jeu[selectRow][selectCol] = "*";
                     showJeu();
                     showMatrix();
                 }
