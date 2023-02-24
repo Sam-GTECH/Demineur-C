@@ -153,7 +153,7 @@ int main()
             selectCol -= 1;
 
         printf("Case (%d-%d) sélectionné.\n\n", selectRow+1, selectCol+1);
-        while (choix == -1)
+        while (action == -1)
         {
             if (Jeu[selectRow][selectCol] == 'P')
             {
