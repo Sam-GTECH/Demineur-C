@@ -94,7 +94,7 @@ void revealCases(int r, int c){
             bombNumber++;
             continue;
         }
-        revealCases(aroundCases[i][0], aroundCases[i][1]);
+        //revealCases(aroundCases[i][0], aroundCases[i][1]);
         printf("\n");
     }
     if (bombNumber==0)
