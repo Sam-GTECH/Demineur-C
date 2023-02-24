@@ -126,9 +126,8 @@ int main()
 
     int selectRow, selectCol;
     int verif = 0;
-    int action = -1;
     int flagCase = 0;
-    int choix = 0;
+    int choix = -1;
     while (1){
         system("cls");
         showMatrix();
@@ -144,13 +143,15 @@ int main()
                 verif = 0;
             }
         }
-            selectRow -= 1;
-            selectCol -= 1;
+
+        selectRow -= 1;
+        selectCol -= 1;
+
         if (Jeu[selectRow][selectCol] == 3)
             flagCase = 1;
 
         printf("Case (%d-%d) sélectionné.\n\n", selectRow+1, selectCol+1);
-        while (action == -1)
+        while (choix == -1)
         {
             if (flagCase == 1)
             {
@@ -160,10 +161,13 @@ int main()
             else
             {
                 printf("Que faire?\n1-Déminer\n2-Poser un drapeau\n3-Changer de case\nChoix:");
-                scanf("%d", &choix);
+                verif = scanf("%d", &choix);
+                if (verif == 0)       // si scanf n'a pas retourné 1, alors l'utilisateur n'a pas retourné un integer
+                    scanf("%*[^\n]"); // Je sais pas comment ça marche mais ça enlève la mauvaise valeur du buffer, empêchant une boucle infinie
                 if (choix == 1)
                 {
                     Jeu[selectRow][selectCol] = matrice[selectRow][selectCol];
+                    //checkNearbyCases(selectRow, selectCol);
                     showMatrix();
 
 
@@ -177,40 +181,19 @@ int main()
                     showMatrix();
 
                 }
+                else if (choix == 3)
+                    break;
+                else {
+                    printf("Choix invalide.");
+                    choix = -1;
+                }
             }
-            verif = scanf("%d", &action);
-            printf("\n[%d]\n", verif);
-            if (verif == 0)       // si scanf n'a pas retourné 1, alors l'utilisateur n'a pas retourné un integer
-                scanf("%*[^\n]"); // Je sais pas comment ça marche mais ça enlève la mauvaise valeur du buffer, empêchant une boucle infinie
-            if (action < 1 || action > 3)
-            {
-                printf("%d n'est pas un choix valide.\n\n", action);
-                action = -1;
-            }
-        }
-
-
-        if (action==1){
-            if (matrice[selectRow][selectCol] == 1) {
-                printf("BOOM!\nIl y avait une bombe, c'est perdu!\n");
-                break;
-            } else if (matrice[selectRow][selectCol] == 0) {
-                matrice[selectRow][selectCol] = 2;
-                checkNearbyCases(selectRow, selectCol);
-            }
-        }
-        else if (action == 2)
-        {
-            matrice[selectRow][selectCol] = 3;
-        }
-        else if (action == 3)
-        {
         }
         verif = 0;
         selectRow = 0;
         selectCol = 0;
         flagCase = 0;
-        action = -1;
+        choix = -1;
     }
 
     return 0;
