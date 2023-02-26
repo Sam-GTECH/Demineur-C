@@ -63,9 +63,16 @@ void showMatrix()
     }
 }
 
-//Fuck this shit
+// Reveal the other cases around a certain case
+// @param r the row in the matrix to check
+// @param c the collumn in the matrix to check
 void revealCasesAround(int r, int c){
     printf("---Called revealCasesAround function with %d-%d---\n", r+1, c+1);
+    if (r < 0 || r > 9 || c < 0 || c > 9) // If the case is out of bounds, we don't wanna check it
+        return;
+    if (Jeu[r][c] != '*') // if the case has already been revealed, we don't wanna check it *again*
+        return;
+    printf("\n[Pass]\n");
     int aroundCases[8][2] = {
         {r   , c-1}, //top
         {r+1 , c-1}, //top right
@@ -81,22 +88,19 @@ void revealCasesAround(int r, int c){
     int bombFound = 0;
     for (i = 0; i < 8; i++)
     {
-        printf("\n[Cheking case %d-%d of value %c]\n", aroundCases[i][0]+1, aroundCases[i][1]+1, matrice[aroundCases[i][0]][aroundCases[i][1]]);
-        if (aroundCases[i][0]<0 || aroundCases[i][1]>9)
-            continue;   
-        if (aroundCases[i][0]<0 || aroundCases[i][1]>9)
-            continue;
-        printf("[yes]\n");
         if (matrice[aroundCases[i][0]][aroundCases[i][1]] == 'X'){
             bombFound++;
-            printf("bomb? you want it? -Morshu");
+            printf("bomb? you want it? -Morshu\n");
             continue;
         }
-        Jeu[aroundCases[i][0]][aroundCases[i][1]] = matrice[aroundCases[i][0]][aroundCases[i][1]];
     }
-
-    if (bombFound==0)
+    if (bombFound==0) {
         Jeu[r][c] = matrice[r][c];
+        for (i = 0; i < 8; i++) {
+            printf("\nCalling the function for %d-%d\n", aroundCases[i][0]+1, aroundCases[i][1]+1);
+            revealCasesAround(aroundCases[i][0], aroundCases[i][1]);
+        }
+    }
     else
         Jeu[r][c] = bombFound + '0';
 }
