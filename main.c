@@ -64,24 +64,24 @@ void showMatrix()
 }
 
 //Fuck this shit
-void checkNearbyCases(int r, int c){
-    printf("---Called checkNerbyCases function with %d-%d---\n", r, c);
+void revealCasesAround(int r, int c){
+    printf("---Called revealCasesAround function with %d-%d---\n", r+1, c+1);
     int aroundCases[8][2] = {
         {r   , c-1}, //top
         {r+1 , c-1}, //top right
-        {r-1 , c  }, //right
+        {r+1 , c  }, //right
         {r+1 , c+1}, //bottom right
-        {r   , c-1}, //bottom
-        {r-1 , c-1}, //bottom left
-        {r+1 , c  }, //left
-        {r+1 , c-1}, //top left
+        {r   , c+1}, //bottom
+        {r-1 , c+1}, //bottom left
+        {r-1 , c  }, //left
+        {r-1 , c-1}, //top left
     };
 
     int i;
     int bombFound = 0;
     for (i = 0; i < 8; i++)
     {
-        printf("\n[Cheking case %d-%d of value %c]\n", aroundCases[i][0], aroundCases[i][1], matrice[aroundCases[i][0]][aroundCases[i][1]]);
+        printf("\n[Cheking case %d-%d of value %c]\n", aroundCases[i][0]+1, aroundCases[i][1]+1, matrice[aroundCases[i][0]][aroundCases[i][1]]);
         if (aroundCases[i][0]<0 || aroundCases[i][1]>9)
             continue;   
         if (aroundCases[i][0]<0 || aroundCases[i][1]>9)
@@ -175,7 +175,7 @@ int main()
                 scanf("%d", &action);
                 if (action == 1) // si choix est 1 déminer
                 {
-                    checkNearbyCases(selectRow, selectCol);
+                    revealCasesAround(selectRow, selectCol);
                     showJeu();
                     showMatrix();
 
@@ -209,7 +209,7 @@ int main()
                 break;
             } else if (matrice[selectRow][selectCol] == 0) {
                 matrice[selectRow][selectCol] = 2;
-                checkNearbyCases(selectRow, selectCol);
+                revealCasesAround(selectRow, selectCol);
             }
         }
         verif = 0;
