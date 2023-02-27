@@ -88,6 +88,8 @@ void revealCasesAround(int r, int c){
     int bombFound = 0;
     for (i = 0; i < 8; i++)
     {
+        if (aroundCases[i][0] < 0 || aroundCases[i][0] > 9 || aroundCases[i][1] < 0 || aroundCases[i][1] > 9)
+            continue;
         if (matrice[aroundCases[i][0]][aroundCases[i][1]] == 'X'){
             bombFound++;
             printf("bomb? you want it? -Morshu\n");
