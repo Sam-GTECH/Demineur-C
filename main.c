@@ -97,19 +97,19 @@ void revealCasesAround(int r, int c){
         }
     }
     if (bombFound==0) {
-        Jeu[r][c] = matrice[r][c];
+        Jeu[r][c] = matrice[r][c]; // count
         for (i = 0; i < 8; i++) {
             printf("\nCalling the function for %d-%d\n", aroundCases[i][0]+1, aroundCases[i][1]+1);
             revealCasesAround(aroundCases[i][0], aroundCases[i][1]);
         }
     }
     else
-        Jeu[r][c] = bombFound + '0';
+        Jeu[r][c] = bombFound + '0'; // count
 }
 
 int main()
 {
-    setlocale(LC_ALL, "fr-FR");
+    setlocale(LC_ALL, "fr-FR"); // A voir pour les accents
 
     for (row = 0; row < 10; row++)
     {
