@@ -210,14 +210,14 @@ int main()
             }
             else
             {
-                // for (row = 0; row < 10; row++)
-                // {
-                //     for (columns = 0; columns < 10; columns++)
-                //     {
-                //         matrice[row][columns] = '-';
-                //     }
-                // }
-                // printf("Bravo vous avez reussi");
+                for (row = 0; row < 10; row++)
+                {
+                    for (columns = 0; columns < 10; columns++)
+                    {
+                        Jeu[row][columns] = '-'== 100-10 ;
+                    }
+                }
+                printf("Bravo vous avez reussi");
             }
         }
         verif = 0;
