@@ -124,7 +124,7 @@ int main()
 
     printf("--- DEMINEUR C ---\n");
     printf("\n");
-    printf("Bienvenue! Appuyer sur n'importe quel touche pour commencer une partie de démineur\n");
+    printf("Bienvenue! Appuyer sur n'importe quel touche pour commencer une partie de demineur\n");
     getchar();
 
     int selectRow, selectCol;
@@ -137,30 +137,29 @@ int main()
         showMatrix();
         while (verif == 0)
         {
-            printf("Sélectionnez le numéro de la ligne et de la colonne que vous voulez modifier: ");
+            printf("Selectionnez le numero de la ligne et de la colonne que vous voulez modifier: ");
             verif = scanf("%d %d", &selectRow, &selectCol);
 
             if (verif < 2)
             {
                 scanf("%*[^\n]");
-                printf("Une des valeurs données n'est pas valide!\n\n");
+                printf("Une des valeurs donnees n'est pas valide!\n\n");
                 verif = 0;
             }
         }
             selectRow -= 1;
             selectCol -= 1;
 
-        printf("Case (%d-%d) sélectionné.\n\n", selectRow+1, selectCol+1);
+        printf("Case (%d-%d) selectionne.\n\n", selectRow+1, selectCol+1);
         while (action == -1)
         {
             if (Jeu[selectRow][selectCol] == 'P')
             {
                 printf("Que faire?\n1-Enlever un drapeau\n2-Changer de case\nChoix:");
                 scanf("%d", &action);
-                if (action == 1)
+                if (action == 1)  // supprimer le drapeau posé si il y a un drapeau
                 {
-                    Jeu[selectRow][selectCol] = 0 ; // supprimer le drapeau posé si il y a un drapeau
-                    Jeu[selectRow][selectCol] = "*";
+                    Jeu[selectRow][selectCol] = '*';
                     showJeu();
                     showMatrix();
                 }
@@ -171,7 +170,7 @@ int main()
             }
             else if (Jeu[selectRow][selectCol] != 'P')
             {
-                printf("Que faire?\n1-Déminer\n2-Poser un drapeau\n3-Changer de case\nChoix:");
+                printf("Que faire?\n1-Deminer\n2-Poser un drapeau\n3-Changer de case\nChoix:");
                 scanf("%d", &action);
                 if (action == 1) // si choix est 1 déminer
                 {
