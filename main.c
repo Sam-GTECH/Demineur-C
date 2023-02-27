@@ -9,13 +9,19 @@ char Jeu[10][10];     // matrice joueur "caché"
 int row, columns;
 int b;
 
+// générateur de 10 bombes de manières aléatoire
 void randomBomb()
-{ // générateur de 10 bombes de manières aléatoire
+{
     srand(time(NULL));
+    int randomR, randomC;
     for (b = 0; b < 10; b++)
     {
-        int randomR = rand() % 10;
-        int randomC = rand() % 10;
+        randomR = rand() % 10;
+        randomC = rand() % 10;                                                
+        while (matrice[randomR][randomC] == 'X'){
+            randomR = rand() % 10;
+            randomC = rand() % 10;            
+        }        
         matrice[randomR][randomC] = ' X';
     }
 }
@@ -116,7 +122,6 @@ int main()
         for (columns = 0; columns < 10; columns++)
         {
             matrice[row][columns] = '-';
-            randomBomb();
         }
     }
     randomBomb();
