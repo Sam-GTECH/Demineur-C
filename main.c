@@ -3,11 +3,32 @@
 #include <locale.h>
 #include <wchar.h>
 #include <stdlib.h>
+#include <windows.h>
 
 char matrice[10][10]; // matrice "admin" avec les bombes affichées
 char Jeu[10][10];     // matrice joueur "caché"
 int row, columns;
 int b;
+
+char setConsoleColor(char *color, int value){
+    if (value == 1)
+        color = "\033[34m";
+    else if (value == 2)
+        color = "\033[32m";
+    else if (value == 3)
+        color = "\033[31m";
+    else if (value == 4)
+        color = "\033[35m";
+    else if (value == 5)
+        color = "\033[96m";
+    else if (value == 6)
+        color = "\033[36m";
+    else if (value == 7)
+        color = "\033[92m";
+    else if (value == 8)
+        color = "\033[37m";
+    return *color;
+}
 
 // générateur de 10 bombes de manières aléatoire
 void randomBomb(int refused[9][2])
@@ -51,7 +72,26 @@ void showJeu()
 
         for (columns = 0; columns < 10; columns++) // boucle pour les colonnes
         {
+            char *color = malloc(6); //TODO: found the external non-solved error
+            if (Jeu[row][columns] == 1)
+                color = "\033[34m";
+            else if (Jeu[row][columns] == 2)
+                color = "\033[32m";
+            else if (Jeu[row][columns] == 3)
+                color = "\033[31m";
+            else if (Jeu[row][columns] == 4)
+                color = "\033[35m";
+            else if (Jeu[row][columns] == 5)
+                color = "\033[96m";
+            else if (Jeu[row][columns] == 6)
+                color = "\033[36m";
+            else if (Jeu[row][columns] == 7)
+                color = "\033[92m";
+            else if (Jeu[row][columns] == 8)
+                color = "\033[37m";
+            printf("%s", color);
             printf("%c  ", Jeu[row][columns]); // affiche la grille de jeu
+            print("\033[0m");
         }
         printf("\n");
     }
@@ -127,6 +167,8 @@ void revealCasesAround(int r, int c){
 int main()
 {
     setlocale(LC_ALL, "fr-FR"); // A voir pour les accents
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    //SetConsoleTextAttribute(hConsole, (FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_INTENSITY | FOREGROUND_GREEN) | FOREGROUND_BLUE);
 
     int firstTry = 1;
 
