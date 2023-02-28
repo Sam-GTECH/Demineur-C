@@ -151,7 +151,7 @@ int main()
             printf("Selectionnez le numero de la ligne et de la colonne que vous voulez modifier: ");
             verif = scanf("%d %d", &selectRow, &selectCol);
 
-            if (verif < 2 || Jeu[selectRow][selectCol] < 11)
+            if (verif < 2 || Jeu[selectRow-1][selectCol-1] < 11)
             {
                 scanf("%*[^\n]");
                 printf("Une des valeurs donnees n'est pas valide!\n\n");
@@ -213,24 +213,24 @@ int main()
         }
 
 
-        if (action == 1) {
-            if (matrice[selectRow][selectCol] == 'X') {
-                printf("BOOM!\nIl y avait une bombe, c'est perdu!\n");
-                showMatrix();
-                break;
-            }
-            else
-            {
-                for (row = 0; row < 10; row++)
-                {
-                    for (columns = 0; columns < 10; columns++)
-                    {
-                        Jeu[row][columns] = '-'== 100-10 ;
-                    }
-                }
-                printf("Bravo vous avez reussi");
-            }
-        }
+        // if (action == 1) {
+        //     if (matrice[selectRow][selectCol] == 'X') {
+        //         printf("BOOM!\nIl y avait une bombe, c'est perdu!\n");
+        //         showMatrix();
+        //         break;
+        //     }
+        //     else if(matrice[selectRow][selectCol] == '-')
+        //     {
+        //         for (row = 0; row < 10; row++)
+        //         {
+        //             for (columns = 0; columns < 10; columns++)
+        //             {
+        //                 revealCasesAround == 90;
+        //             }
+        //         }
+        //         printf("Bravo vous avez reussi");
+        //     }
+        // }
         verif = 0;
         selectRow = 0;
         selectCol = 0;
