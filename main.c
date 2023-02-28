@@ -17,11 +17,12 @@ void randomBomb()
     for (b = 0; b < 10; b++)
     {
         randomR = rand() % 10;
-        randomC = rand() % 10;                                                
-        while (matrice[randomR][randomC] == 'X'){
+        randomC = rand() % 10;
+        while (matrice[randomR][randomC] == 'X')
+        {
             randomR = rand() % 10;
-            randomC = rand() % 10;            
-        }        
+            randomC = rand() % 10;
+        }
         matrice[randomR][randomC] = ' X';
     }
 }
@@ -46,12 +47,11 @@ void showJeu()
     }
     printf("  --------------------------------\n");
     printf("\n");
-
 }
 
 void showMatrix()
 {
-        printf("  | 1  2  3  4  5  6  7  8  9  10\n");
+    printf("  | 1  2  3  4  5  6  7  8  9  10\n");
     printf("  --------------------------------\n");
 
     for (row = 0; row < 10; row++)
@@ -72,48 +72,54 @@ void showMatrix()
 // Reveal the other cases around a certain case
 // @param r the row in the matrix to check
 // @param c the collumn in the matrix to check
-void revealCasesAround(int r, int c){
-    printf("---Called revealCasesAround function with %d-%d---\n", r+1, c+1);
+void revealCasesAround(int r, int c, int countVictory)
+{
+    printf("---Called revealCasesAround function with %d-%d---\n", r + 1, c + 1);
     if (r < 0 || r > 9 || c < 0 || c > 9) // If the case is out of bounds, we don't wanna check it
         return;
     if (Jeu[r][c] != '*') // if the case has already been revealed, we don't wanna check it *again*
         return;
     printf("\n[Pass]\n");
     int aroundCases[8][2] = {
-        {r   , c-1}, //top
-        {r+1 , c-1}, //top right
-        {r+1 , c  }, //right
-        {r+1 , c+1}, //bottom right
-        {r   , c+1}, //bottom
-        {r-1 , c+1}, //bottom left
-        {r-1 , c  }, //left
-        {r-1 , c-1}, //top left
-    };
+        {r, c - 1},     // top
+        {r + 1, c - 1}, // top right
+        {r + 1, c},     // right
+        {r + 1, c + 1}, // bottom right
+        {r, c + 1},     // bottom
+        {r - 1, c + 1}, // bottom left
+        {r - 1, c},     // left
+        {r - 1, c - 1}, // top left
+    }; // Cases autours de l'élément choisi
 
     int i;
     int bombFound = 0;
     for (i = 0; i < 8; i++)
     {
-        if (aroundCases[i][0] < 0 || aroundCases[i][0] > 9 || aroundCases[i][1] < 0 || aroundCases[i][1] > 9)
+        if (aroundCases[i][0] < 0 || aroundCases[i][0] > 9 || aroundCases[i][1] < 0 || aroundCases[i][1] > 9) // Localise la recherche de bombe unisuement dans la grille
             continue;
-        if (matrice[aroundCases[i][0]][aroundCases[i][1]] == 'X'){
+        if (matrice[aroundCases[i][0]][aroundCases[i][1]] == 'X') // compte le nombre de bombe autour de la case
+        {
             bombFound++;
             printf("bomb? you want it? -Morshu\n");
+            countVictory = 8-bombFound;
             continue;
         }
     }
-    if (bombFound==0) {
+    if (bombFound == 0)
+    {
         Jeu[r][c] = matrice[r][c]; // count
-        for (i = 0; i < 8; i++) {
-            printf("\nCalling the function for %d-%d\n", aroundCases[i][0]+1, aroundCases[i][1]+1);
-            revealCasesAround(aroundCases[i][0], aroundCases[i][1]);
+        for (i = 0; i < 8; i++)
+        {
+            printf("\nCalling the function for %d-%d\n", aroundCases[i][0] + 1, aroundCases[i][1] + 1);
+            revealCasesAround(aroundCases[i][0], aroundCases[i][1], 0);
+            countVictory = aroundCases[i][0]+aroundCases[i][1];
         }
     }
     else
         Jeu[r][c] = bombFound + '0'; // count
 }
 
-int main()
+int main(countVictory)
 {
     setlocale(LC_ALL, "fr-FR"); // A voir pour les accents
 
@@ -142,7 +148,9 @@ int main()
     int verif = 0;
     int action = -1;
     int choix = 0;
-    while (1){
+
+    while (1)
+    {
         system("cls");
         showJeu();
         showMatrix();
@@ -151,31 +159,31 @@ int main()
             printf("Selectionnez le numero de la ligne et de la colonne que vous voulez modifier: ");
             verif = scanf("%d %d", &selectRow, &selectCol);
 
-            if (verif < 2 || Jeu[selectRow-1][selectCol-1] < 11 || Jeu[selectCol-1][selectRow-1] < 11)
+            if (verif < 2 || Jeu[selectRow - 1][selectCol - 1] < 11 || Jeu[selectCol - 1][selectRow - 1] < 11)
             {
                 scanf("%*[^\n]");
                 printf("Une des valeurs donnees n'est pas valide!\n\n");
                 verif = 0;
             }
         }
-            selectRow -= 1;
-            selectCol -= 1;
+        selectRow -= 1;
+        selectCol -= 1;
 
-        printf("Case (%d-%d) selectionne.\n\n", selectRow+1, selectCol+1);
+        printf("Case (%d-%d) selectionne.\n\n", selectRow + 1, selectCol + 1);
         while (action == -1)
         {
             if (Jeu[selectRow][selectCol] == 'P')
             {
                 printf("Que faire?\n1-Enlever un drapeau\n2-Changer de case\nChoix:");
                 scanf("%d", &action);
-                if (action == 1)  // supprimer le drapeau posé si il y a un drapeau
+                if (action == 1) // supprimer le drapeau posé si il y a un drapeau
                 {
                     Jeu[selectRow][selectCol] = '*';
                     showJeu();
                     showMatrix();
                 }
                 else
-                { 
+                {
                     verif = 0; // renvoie au choix d'une case
                 }
             }
@@ -185,17 +193,15 @@ int main()
                 scanf("%d", &action);
                 if (action == 1) // si choix est 1 déminer
                 {
-                    revealCasesAround(selectRow, selectCol);
+                    revealCasesAround(selectRow, selectCol, 0);
                     showJeu();
                     showMatrix();
-
-
                 }
-                else if(action == 2)    //si choix est 2 poser drapeau
-                    {  
-                        Jeu[selectRow][selectCol] = 'P';
-                    }
-                else if(action == 3)
+                else if (action == 2) // si choix est 2 poser drapeau
+                {
+                    Jeu[selectRow][selectCol] = 'P';
+                }
+                else if (action == 3)
                 {
                     verif = 0;
                 }
@@ -212,22 +218,16 @@ int main()
             }
         }
 
-
-        if (action == 1) {
-            if (matrice[selectRow][selectCol] == 'X') {
+        if (action == 1)
+        {
+            if (matrice[selectRow][selectCol] == 'X')
+            {
                 printf("BOOM!\nIl y avait une bombe, c'est perdu!\n");
                 showMatrix();
                 break;
             }
-            else if(matrice[selectRow][selectCol] == '-')
+            else if (countVictory == 90)
             {
-                for (row = 0; row < 10; row++)
-                {
-                    for (columns = 0; columns < 10; columns++)
-                    {
-                        revealCasesAround == 90;
-                    }
-                }
                 printf("Bravo vous avez reussi");
             }
         }
