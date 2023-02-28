@@ -14,6 +14,12 @@ void randomBomb(int refused[9][2])
 {
     srand(time(NULL));
     int randomR, randomC;
+    int i;
+    for (i = 0; i < 9; i++)
+    {
+        printf("Refused case %d-%d\n", refused[i][0]+1, refused[i][1]+1);
+        matrice[refused[i][0]][refused[i][1]] = 'X';
+    }
     for (b = 0; b < 10; b++)
     {
         randomR = rand() % 10;
@@ -22,14 +28,12 @@ void randomBomb(int refused[9][2])
             randomR = rand() % 10;
             randomC = rand() % 10;            
         }        
-        for (row = 0; row < 10; row++)
-        {
-            for (columns = 0; columns < 10; columns++)
-            {
-                // TODO: the check for the refused cases
-            }
-        }
         matrice[randomR][randomC] = ' X';
+    }
+    for (i = 0; i < 9; i++)
+    {
+        printf("Restoring case %d-%d\n", refused[i][0]+1, refused[i][1]+1);
+        matrice[refused[i][0]][refused[i][1]] = '-';
     }
 }
 
