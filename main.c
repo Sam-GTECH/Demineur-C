@@ -11,10 +11,17 @@ int b;
 int countVictory; // Compteur de case vide pour condition de victoire
 
 // générateur de 10 bombes de manières aléatoire
-void randomBomb()
+// @param refused an array giving the positions of the 9 cases the function should not put a bomb on
+void randomBomb(int refused[9][2])
 {
     srand(time(NULL));
     int randomR, randomC;
+    int i;
+    for (i = 0; i < 9; i++)
+    {
+        printf("Refused case %d-%d\n", refused[i][0]+1, refused[i][1]+1);
+        matrice[refused[i][0]][refused[i][1]] = 'X';
+    }
     for (b = 0; b < 10; b++)
     {
         randomR = rand() % 10;
@@ -25,6 +32,11 @@ void randomBomb()
             randomC = rand() % 10;
         }
         matrice[randomR][randomC] = ' X';
+    }
+    for (i = 0; i < 9; i++)
+    {
+        printf("Restoring case %d-%d\n", refused[i][0]+1, refused[i][1]+1);
+        matrice[refused[i][0]][refused[i][1]] = '-';
     }
 }
 
@@ -120,6 +132,10 @@ void revealCasesAround(int r, int c)
 
 int main()
 {
+    setlocale(LC_ALL, "fr-FR"); // A voir pour les accents
+
+    int firstTry = 1;
+
     for (row = 0; row < 10; row++)
     {
         for (columns = 0; columns < 10; columns++)
@@ -127,7 +143,7 @@ int main()
             matrice[row][columns] = '-'; // affiche '-' dans la matrice admin
         }
     }
-    randomBomb(); // Fonctions pour placer les bombes
+    
     for (row = 0; row < 10; row++)
     {
         for (columns = 0; columns < 10; columns++)
@@ -163,6 +179,7 @@ int main()
                 verif = 0;
             }
         }
+
         selectRow -= 1;
         selectCol -= 1;
 
@@ -190,7 +207,22 @@ int main()
                 scanf_s("%d", &action);
                 if (action == 1) // si choix est 1 déminer
                 {
-                    revealCasesAround(selectRow, selectCol); // révélé la case choisi
+                    if (firstTry==1) {
+                        int refusedCases[9][2] = {
+                            {selectRow, selectCol},
+                            {selectRow   , selectCol-1}, //top
+                            {selectRow+1 , selectCol-1}, //top right
+                            {selectRow+1 , selectCol  }, //right
+                            {selectRow+1 , selectCol+1}, //bottom right
+                            {selectRow   , selectCol+1}, //bottom
+                            {selectRow-1 , selectCol+1}, //bottom left
+                            {selectRow-1 , selectCol  }, //left
+                            {selectRow-1 , selectCol-1}, //top left
+                        };
+                        randomBomb(refusedCases);
+                        firstTry = 0;
+                    }
+                    revealCasesAround(selectRow, selectCol);
                     showJeu();
                     showMatrix();
                 }
