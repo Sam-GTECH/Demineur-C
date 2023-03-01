@@ -8,6 +8,7 @@ char matrice[10][10]; // matrice "admin" avec les bombes affichées
 char Jeu[10][10];     // matrice joueur "caché"
 int row, columns;
 int b;
+int countVictory;
 
 // générateur de 10 bombes de manières aléatoire
 void randomBomb()
@@ -72,7 +73,7 @@ void showMatrix()
 // Reveal the other cases around a certain case
 // @param r the row in the matrix to check
 // @param c the collumn in the matrix to check
-void revealCasesAround(int r, int c, int countVictory)
+void revealCasesAround(int r, int c)
 {
     printf("---Called revealCasesAround function with %d-%d---\n", r + 1, c + 1);
     if (r < 0 || r > 9 || c < 0 || c > 9) // If the case is out of bounds, we don't wanna check it
@@ -93,6 +94,7 @@ void revealCasesAround(int r, int c, int countVictory)
 
     int i;
     int bombFound = 0;
+    countVictory++;
     for (i = 0; i < 8; i++)
     {
         if (aroundCases[i][0] < 0 || aroundCases[i][0] > 9 || aroundCases[i][1] < 0 || aroundCases[i][1] > 9) // Localise la recherche de bombe unisuement dans la grille
@@ -101,7 +103,6 @@ void revealCasesAround(int r, int c, int countVictory)
         {
             bombFound++;
             printf("bomb? you want it? -Morshu\n");
-            countVictory = 8-bombFound;
             continue;
         }
     }
@@ -112,14 +113,14 @@ void revealCasesAround(int r, int c, int countVictory)
         {
             printf("\nCalling the function for %d-%d\n", aroundCases[i][0] + 1, aroundCases[i][1] + 1);
             revealCasesAround(aroundCases[i][0], aroundCases[i][1], 0);
-            countVictory = aroundCases[i][0]+aroundCases[i][1];
         }
     }
     else
         Jeu[r][c] = bombFound + '0'; // count
+
 }
 
-int main(countVictory)
+int main()
 {
     setlocale(LC_ALL, "fr-FR"); // A voir pour les accents
 
@@ -206,11 +207,7 @@ int main(countVictory)
                     verif = 0;
                 }
             }
-
-            // verif = scanf("%d", &action);
-            // printf("\n[%d]\n", verif);
-            // if (verif == 0)       // si scanf n'a pas retourné 1, alors l'utilisateur n'a pas retourné un integer
-            //     scanf("%*[^\n]"); // Je sais pas comment ça marche mais ça enlève la mauvaise valeur du buffer, empêchant une boucle infinie
+            
             if (action < 1 || action > 3)
             {
                 printf("%d n'est pas un choix valide.\n\n", action);
@@ -224,11 +221,13 @@ int main(countVictory)
             {
                 printf("BOOM!\nIl y avait une bombe, c'est perdu!\n");
                 showMatrix();
+                printf("le nombre de case vide est : %d", countVictory);
                 break;
             }
             else if (countVictory == 90)
             {
                 printf("Bravo vous avez reussi");
+                break;
             }
         }
         verif = 0;
