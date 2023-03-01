@@ -10,6 +10,7 @@ int row, columns;
 int b;
 
 // générateur de 10 bombes de manières aléatoire
+// @param refused an array giving the positions of the 9 cases the function should not put a bomb on
 void randomBomb(int refused[9][2])
 {
     srand(time(NULL));
