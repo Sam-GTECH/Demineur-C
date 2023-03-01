@@ -112,7 +112,7 @@ void revealCasesAround(int r, int c)
         for (i = 0; i < 8; i++)
         {
             printf("\nCalling the function for %d-%d\n", aroundCases[i][0] + 1, aroundCases[i][1] + 1);
-            revealCasesAround(aroundCases[i][0], aroundCases[i][1], 0);
+            revealCasesAround(aroundCases[i][0], aroundCases[i][1]);
         }
     }
     else
@@ -194,7 +194,7 @@ int main()
                 scanf("%d", &action);
                 if (action == 1) // si choix est 1 déminer
                 {
-                    revealCasesAround(selectRow, selectCol, 0);
+                    revealCasesAround(selectRow, selectCol);
                     showJeu();
                     showMatrix();
                 }
