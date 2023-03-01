@@ -5,13 +5,13 @@
 #include <stdlib.h>
 
 char matrice[10][10]; // matrice "admin" avec les bombes affichées
-char Jeu[10][10];     // matrice joueur "caché"
-int row, columns;
+char Jeu[10][10];     // matrice joueur " bombes caché"
+int row, columns;  // lignes et colonnes
 int b;
-int countVictory;
+int countVictory; // Compteur de case vide pour condition de victoire
 
 // générateur de 10 bombes de manières aléatoire
-void randomBomb()
+void randomBomb() 
 {
     srand(time(NULL));
     int randomR, randomC;
@@ -19,7 +19,7 @@ void randomBomb()
     {
         randomR = rand() % 10;
         randomC = rand() % 10;
-        while (matrice[randomR][randomC] == 'X')
+        while (matrice[randomR][randomC] == 'X') // quand il y a déja une bombe replacer une bombe ailleurs
         {
             randomR = rand() % 10;
             randomC = rand() % 10;
@@ -28,8 +28,8 @@ void randomBomb()
     }
 }
 
-void showJeu()
-{ // affichage de la grille de jeu avec pour l'instant GRILLE ADMIN A SUPR !
+void showJeu() // grille de jeu
+{
     printf("  | 1  2  3  4  5  6  7  8  9  10\n");
     printf("  --------------------------------\n");
 
@@ -50,7 +50,7 @@ void showJeu()
     printf("\n");
 }
 
-void showMatrix()
+void showMatrix() // grille admin (où l'on voit les bombes)
 {
     printf("  | 1  2  3  4  5  6  7  8  9  10\n");
     printf("  --------------------------------\n");
@@ -76,9 +76,9 @@ void showMatrix()
 void revealCasesAround(int r, int c)
 {
     printf("---Called revealCasesAround function with %d-%d---\n", r + 1, c + 1);
-    if (r < 0 || r > 9 || c < 0 || c > 9) // If the case is out of bounds, we don't wanna check it
+    if (r < 0 || r > 9 || c < 0 || c > 9) // Si la case est en dehors de la grille, on ne vérifie pas
         return;
-    if (Jeu[r][c] != '*') // if the case has already been revealed, we don't wanna check it *again*
+    if (Jeu[r][c] != '*') // Si la case a déja été révélé, on ne révèle pas une seconde fois
         return;
     printf("\n[Pass]\n");
     int aroundCases[8][2] = {
@@ -94,7 +94,7 @@ void revealCasesAround(int r, int c)
 
     int i;
     int bombFound = 0;
-    countVictory++;
+    countVictory++; // ajoute 1 au compteur de victoire à chaque révélation
     for (i = 0; i < 8; i++)
     {
         if (aroundCases[i][0] < 0 || aroundCases[i][0] > 9 || aroundCases[i][1] < 0 || aroundCases[i][1] > 9) // Localise la recherche de bombe unisuement dans la grille
@@ -108,7 +108,7 @@ void revealCasesAround(int r, int c)
     }
     if (bombFound == 0)
     {
-        Jeu[r][c] = matrice[r][c]; // count
+        Jeu[r][c] = matrice[r][c];
         for (i = 0; i < 8; i++)
         {
             printf("\nCalling the function for %d-%d\n", aroundCases[i][0] + 1, aroundCases[i][1] + 1);
@@ -116,27 +116,25 @@ void revealCasesAround(int r, int c)
         }
     }
     else
-        Jeu[r][c] = bombFound + '0'; // count
+        Jeu[r][c] = bombFound + '0';
 
 }
 
 int main()
 {
-    setlocale(LC_ALL, "fr-FR"); // A voir pour les accents
-
     for (row = 0; row < 10; row++)
     {
         for (columns = 0; columns < 10; columns++)
         {
-            matrice[row][columns] = '-';
+            matrice[row][columns] = '-'; // affiche '-' dans la matrice admin
         }
     }
-    randomBomb();
+    randomBomb(); // Fonctions pour placer les bombes
     for (row = 0; row < 10; row++)
     {
         for (columns = 0; columns < 10; columns++)
         {
-            Jeu[row][columns] = '*';
+            Jeu[row][columns] = '*'; // affiche '*' dans la matrice joueur
         }
     }
 
@@ -227,6 +225,7 @@ int main()
             else if (countVictory == 90)
             {
                 printf("Bravo vous avez reussi");
+                printf("\n");
                 break;
             }
         }
