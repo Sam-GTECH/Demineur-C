@@ -42,6 +42,7 @@ void randomBomb(int refused[9][2])
 
 void showJeu() // grille de jeu
 {
+    printf("\033[90m");
     printf("  | 1  2  3  4  5  6  7  8  9  10\n");
     printf("  --------------------------------\n");
 
@@ -54,12 +55,32 @@ void showJeu() // grille de jeu
 
         for (columns = 0; columns < 10; columns++) // boucle pour les colonnes
         {
+            if (Jeu[row][columns]=='1')
+                printf("\033[94m");
+            else if (Jeu[row][columns]=='2')
+                printf("\033[32m");
+            else if (Jeu[row][columns]=='3')
+                printf("\033[31m");
+            else if (Jeu[row][columns]=='4')
+                printf("\033[36m");
+            else if (Jeu[row][columns]=='5')
+                printf("\033[33m");
+            else if (Jeu[row][columns]=='6')
+                printf("\033[96m");
+            else if (Jeu[row][columns]=='7')
+                printf("\033[35m");
+            else if (Jeu[row][columns]=='8')
+                printf("\033[37m");
+            else
+            printf("\033[0m");
             printf("%c  ", Jeu[row][columns]); // affiche la grille de jeu
         }
+        printf("\033[90m");
         printf("\n");
     }
     printf("  --------------------------------\n");
     printf("\n");
+    printf("\033[0m");
 }
 
 void showMatrix() // grille admin (où l'on voit les bombes)
@@ -219,7 +240,7 @@ int main()
                             {selectRow-1 , selectCol  }, //left
                             {selectRow-1 , selectCol-1}, //top left
                         };
-                        randomBomb(refusedCases);
+                         randomBomb(refusedCases);
                         firstTry = 0;
                     }
                     revealCasesAround(selectRow, selectCol);
