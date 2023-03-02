@@ -206,7 +206,7 @@ int main()
             }
             else if (Jeu[selectRow-1][selectCol-1] != '*')
             {
-                printf("La case %d-%d a déjà été déminée!\n\n", selectRow, selectCol);
+                printf("La case %d-%d a deja ete deminee!\n\n", selectRow, selectCol);
                 verif = 0;
             }
         }
@@ -274,6 +274,7 @@ int main()
         {
             if (matrice[selectRow][selectCol] == 'X') // Si la case déminer est une bombe
             {
+                printf("\033[31m"); // Change la couleur du texte de la console à rouge
                 printf("BOOM!\nIl y avait une bombe, c'est perdu!\n"); // Afficher Perdu !
                 showMatrix();
                 break;
