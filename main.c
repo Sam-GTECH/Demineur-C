@@ -3,6 +3,7 @@
 #include "wchar.h"
 #include "stdlib.h"
 #include "Windows.h"
+#include "conio.h"
 
 char matrice[10][10]; // matrice "admin" avec les bombes affichées
 char Jeu[10][10];     // matrice joueur " bombes caché"
@@ -41,7 +42,7 @@ void randomBomb(int refused[9][2])
 }
 
 // Affiche la grille de jeu
-void showJeu()
+void showJeu(int x, int y)
 {
     printf("\033[90m"); // Change la couleur du texte de la console à gris foncé
     printf("  | 1  2  3  4  5  6  7  8  9  10\n");
@@ -76,6 +77,8 @@ void showJeu()
                 printf("\033[7m");
             else
                 printf("\033[0m");
+            if (row==y && columns==x)
+                printf("\033[7m");
             printf("%c\033[0m  ", Jeu[row][columns]); // affiche la grille de jeu
         }
         printf("\033[90m"); // Change la couleur du texte de la console à gris foncé
@@ -188,11 +191,102 @@ int main()
     int action = -1;
     int choix = 0;
 
+    //Variables du pointer
+    int posX = 4;
+    int posY = 4;
+    int canMove = 1;
+
     while (1) // Commencement du jeu
     {
         system("cls"); //nettoyage du terminale
-        showJeu(); // affiche la grille du joueur
+        showJeu(posX, posY); // affiche la grille du joueur
         //showMatrix(); // affiche la grille admin
+
+        while (1){
+            if (_kbhit()){
+                int key = _getch();
+                printf("The key hitted is %i", key);
+                switch (key)
+                {
+                    //Déplacement
+                    case 72: // Flèche haut
+                        posY-=1;
+                        break;
+                    case 80: // Flèche bas
+                        posY+=1;
+                        break;
+                    case 75: // Flèche gauche
+                        posX-=1;
+                        break;
+                    case 77: // Flèche droite
+                        posX+=1;
+                        break;
+
+                    //Actions
+                    case 13:
+                    case 32: //Entrée ou Espace: démine une case
+                        action = 1;
+                        break;
+                    case 102:
+                    case 70: //F (minuscule et majuscule because why not?): pose/retire un drapeau
+                        action = 2;
+                        break;
+                    default:
+                        break;
+                }
+
+                if (posX<0)
+                    posX = 0;
+                else if (posX>9)
+                    posX = 9;
+                if (posY<0)
+                    posY = 0;
+                else if (posY>9)
+                    posY = 9;
+
+                break;
+            }
+        }
+
+        selectRow = posY;
+        selectCol = posX;
+
+        if (Jeu[selectRow][selectRow]!='*'){
+            action = -1;
+        }
+
+        //TODO: Comprendre pourquoi les cases ne répondent plus parfois et pourquoi les flags agissent n'importe comment
+        if (action == 1) {
+            if (Jeu[selectRow][selectCol] != 'P') {
+                if (firstTry==1) { // Si c'est le premier coup du joueur, on met en place les bombes
+                    int refusedCases[9][2] = {
+                        {selectRow, selectCol},
+                        {selectRow   , selectCol-1}, //top
+                        {selectRow+1 , selectCol-1}, //top right
+                        {selectRow+1 , selectCol  }, //right
+                        {selectRow+1 , selectCol+1}, //bottom right
+                        {selectRow   , selectCol+1}, //bottom
+                        {selectRow-1 , selectCol+1}, //bottom left
+                        {selectRow-1 , selectCol  }, //left
+                        {selectRow-1 , selectCol-1}, //top left
+                    };
+                    randomBomb(refusedCases);
+                    firstTry = 0;
+                }
+                revealCasesAround(selectRow, selectCol);
+            }
+        } else if (action == 2) {
+            if (Jeu[selectRow][selectCol] == 'P') // si il y a un drapeau
+                Jeu[selectRow][selectCol] = '*'; // Place le drapeau
+            else
+                Jeu[selectRow][selectCol] = 'P';
+        }
+
+        selectRow = 0;
+        selectCol = 0;
+        action = -1;
+
+        /*
         while (verif == 0)
         {
             printf("Sélectionnez le numéro de la ligne et de la colonne que vous voulez modifier: ");
@@ -290,6 +384,7 @@ int main()
         selectRow = 0;
         selectCol = 0;
         action = -1;
+        */
     }
 
     return 0;
