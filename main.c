@@ -75,7 +75,7 @@ void showJeu()
             else if (Jeu[row][columns]=='P')
                 printf("\033[7m");
             else
-            printf("\033[0m");
+                printf("\033[0m");
             printf("%c\033[0m  ", Jeu[row][columns]); // affiche la grille de jeu
         }
         printf("\033[90m"); // Change la couleur du texte de la console à gris foncé
@@ -190,7 +190,7 @@ int main()
     {
         system("cls"); //nettoyage du terminale
         showJeu(); // affiche la grille du joueur
-        showMatrix(); // affiche la grille admin
+        //showMatrix(); // affiche la grille admin
         while (verif == 0)
         {
             printf("Selectionnez le numero de la ligne et de la colonne que vous voulez modifier: ");
@@ -222,8 +222,6 @@ int main()
                 if (action == 1) // supprimer le drapeau posé si il y a un drapeau
                 {
                     Jeu[selectRow][selectCol] = '*';
-                    showJeu();
-                    showMatrix();
                 }
                 else
                 {
@@ -252,8 +250,6 @@ int main()
                         firstTry = 0;
                     }
                     revealCasesAround(selectRow, selectCol);
-                    showJeu();
-                    showMatrix();
                 }
                 else if (action == 2) // si choix est 2 poser drapeau
                 {
