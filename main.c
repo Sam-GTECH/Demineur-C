@@ -11,7 +11,7 @@ int b;
 int countVictory; // Compteur de case vide pour condition de victoire
 
 // générateur de 10 bombes de manières aléatoire
-// @param refused an array giving the positions of the 9 cases the function should not put a bomb on
+// @param refused Une table qui donne la position des 9 cases sur lesquelles aucune bombe ne doit être placée
 void randomBomb(int refused[9][2])
 {
     srand(time(NULL));
@@ -19,7 +19,7 @@ void randomBomb(int refused[9][2])
     int i;
     for (i = 0; i < 9; i++)
     {
-        printf("Refused case %d-%d\n", refused[i][0]+1, refused[i][1]+1);
+        // On pose temp. une bombe sur la case du joueur et autour pour que la boucle while après empêche une vraie bombe d'être placée sur ces cases.
         matrice[refused[i][0]][refused[i][1]] = 'X';
     }
     for (b = 0; b < 10; b++)
@@ -35,14 +35,15 @@ void randomBomb(int refused[9][2])
     }
     for (i = 0; i < 9; i++)
     {
-        printf("Restoring case %d-%d\n", refused[i][0]+1, refused[i][1]+1);
+        // Une fois les vrais bombes placées, on enlève celles sur la case du joueur et ses alentours, les certifiant "safe"
         matrice[refused[i][0]][refused[i][1]] = '-';
     }
 }
 
-void showJeu() // grille de jeu
+// Affiche la grille de jeu
+void showJeu()
 {
-    printf("\033[90m");
+    printf("\033[90m"); // Change la couleur du texte de la console à gris foncé
     printf("  | 1  2  3  4  5  6  7  8  9  10\n");
     printf("  --------------------------------\n");
 
@@ -56,34 +57,35 @@ void showJeu() // grille de jeu
         for (columns = 0; columns < 10; columns++) // boucle pour les colonnes
         {
             if (Jeu[row][columns]=='1')
-                printf("\033[94m");
+                printf("\033[94m"); // Change la couleur du texte de la console à bleu
             else if (Jeu[row][columns]=='2')
-                printf("\033[32m");
+                printf("\033[32m"); // Change la couleur du texte de la console à vert
             else if (Jeu[row][columns]=='3')
-                printf("\033[31m");
+                printf("\033[31m"); // Change la couleur du texte de la console à rouge
             else if (Jeu[row][columns]=='4')
-                printf("\033[36m");
+                printf("\033[36m"); // Change la couleur du texte de la console à bleu clair
             else if (Jeu[row][columns]=='5')
-                printf("\033[33m");
+                printf("\033[33m"); // Change la couleur du texte de la console à jaune
             else if (Jeu[row][columns]=='6')
-                printf("\033[96m");
+                printf("\033[96m"); // Change la couleur du texte de la console à cyan
             else if (Jeu[row][columns]=='7')
-                printf("\033[35m");
+                printf("\033[35m"); // Change la couleur du texte de la console à violet
             else if (Jeu[row][columns]=='8')
-                printf("\033[37m");
+                printf("\033[37m"); // Change la couleur du texte de la console à gris clair (mais ça semble impossible à voir)
             else
             printf("\033[0m");
             printf("%c  ", Jeu[row][columns]); // affiche la grille de jeu
         }
-        printf("\033[90m");
+        printf("\033[90m"); // Change la couleur du texte de la console à gris foncé
         printf("\n");
     }
     printf("  --------------------------------\n");
     printf("\n");
-    printf("\033[0m");
+    printf("\033[0m"); // Change la couleur du texte de la console au défaut (blanc)
 }
 
-void showMatrix() // grille admin (où l'on voit les bombes)
+// Affiche la grille admin avec les bombes
+void showMatrix()
 {
     printf("  | 1  2  3  4  5  6  7  8  9  10\n");
     printf("  --------------------------------\n");
@@ -103,17 +105,16 @@ void showMatrix() // grille admin (où l'on voit les bombes)
     }
 }
 
-// Reveal the other cases around a certain case
-// @param r the row in the matrix to check
-// @param c the collumn in the matrix to check
+// Révèle une case et ses alentours
+// @param r la rangée de la matrice où est la case
+// @param c la colonne de la matrice où est la case
 void revealCasesAround(int r, int c)
 {
-    printf("---Called revealCasesAround function with %d-%d---\n", r + 1, c + 1);
     if (r < 0 || r > 9 || c < 0 || c > 9) // Si la case est en dehors de la grille, on ne vérifie pas
         return;
     if (Jeu[r][c] != '*') // Si la case a déja été révélé, on ne révèle pas une seconde fois
         return;
-    printf("\n[Pass]\n");
+    // Cases autours de l'élément choisi
     int aroundCases[8][2] = {
         {r, c - 1},     // top
         {r + 1, c - 1}, // top right
@@ -123,14 +124,14 @@ void revealCasesAround(int r, int c)
         {r - 1, c + 1}, // bottom left
         {r - 1, c},     // left
         {r - 1, c - 1}, // top left
-    }; // Cases autours de l'élément choisi
+    };
 
     int i;
-    int bombFound = 0;
+    int bombFound = 0; // Le nombre de bombes trouvés autour de la case concernée
     countVictory++; // ajoute 1 au compteur de victoire à chaque révélation
     for (i = 0; i < 8; i++)
     {
-        if (aroundCases[i][0] < 0 || aroundCases[i][0] > 9 || aroundCases[i][1] < 0 || aroundCases[i][1] > 9) // Localise la recherche de bombe unisuement dans la grille
+        if (aroundCases[i][0] < 0 || aroundCases[i][0] > 9 || aroundCases[i][1] < 0 || aroundCases[i][1] > 9) // Si c'est hors-limite, on passe
             continue;
         if (matrice[aroundCases[i][0]][aroundCases[i][1]] == 'X') // compte le nombre de bombe autour de la case
         {
@@ -138,7 +139,7 @@ void revealCasesAround(int r, int c)
             continue;
         }
     }
-    if (bombFound == 0)
+    if (bombFound == 0) // Si y'a aucune bombe au alentours
     {
         Jeu[r][c] = matrice[r][c];
         for (i = 0; i < 8; i++)
@@ -147,7 +148,7 @@ void revealCasesAround(int r, int c)
         }
     }
     else
-        Jeu[r][c] = bombFound + '0';
+        Jeu[r][c] = bombFound + '0'; //La case affiche le nombre de bombes autour
 
 }
 
@@ -155,7 +156,7 @@ int main()
 {
     setlocale(LC_ALL, "fr-FR"); // A voir pour les accents
 
-    int firstTry = 1;
+    int firstTry = 1; // Détermine si c'est le premier coup du joueur ou pas
 
     for (row = 0; row < 10; row++)
     {
@@ -195,7 +196,7 @@ int main()
 
             if (verif < 2 || Jeu[selectRow - 1][selectCol - 1] < 11 || Jeu[selectCol - 1][selectRow - 1] < 11) // Si la valeur n'est pas entre 1 et 10 
             {
-                scanf_s("%*[^\n]");
+                scanf_s("%*[^\n]"); // Vide le buffer si la valeur n'est pas un integer
                 printf("Une des valeurs donnees n'est pas valide!\n\n"); // afficher erreur
                 verif = 0;
             }
@@ -228,7 +229,7 @@ int main()
                 scanf_s("%d", &action);
                 if (action == 1) // si choix est 1 déminer
                 {
-                    if (firstTry==1) {
+                    if (firstTry==1) { // Si c'est le premier coup du joueur, on met en place les bombes
                         int refusedCases[9][2] = {
                             {selectRow, selectCol},
                             {selectRow   , selectCol-1}, //top
@@ -240,7 +241,7 @@ int main()
                             {selectRow-1 , selectCol  }, //left
                             {selectRow-1 , selectCol-1}, //top left
                         };
-                         randomBomb(refusedCases);
+                        randomBomb(refusedCases);
                         firstTry = 0;
                     }
                     revealCasesAround(selectRow, selectCol);
