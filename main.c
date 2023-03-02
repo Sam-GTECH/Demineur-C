@@ -206,7 +206,7 @@ int main()
             }
             else if (Jeu[selectRow-1][selectCol-1] != '*')
             {
-                printf("La case %d-%d a deja ete deminee!\n\n", selectRow, selectCol);
+                printf("La case %d-%d a déjà été déminée!\n\n", selectRow, selectCol);
                 verif = 0;
             }
         }
