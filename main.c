@@ -72,9 +72,11 @@ void showJeu()
                 printf("\033[35m"); // Change la couleur du texte de la console à violet
             else if (Jeu[row][columns]=='8')
                 printf("\033[37m"); // Change la couleur du texte de la console à gris clair (mais ça semble impossible à voir)
+            else if (Jeu[row][columns]=='P')
+                printf("\033[7m");
             else
             printf("\033[0m");
-            printf("%c  ", Jeu[row][columns]); // affiche la grille de jeu
+            printf("%c\033[0m  ", Jeu[row][columns]); // affiche la grille de jeu
         }
         printf("\033[90m"); // Change la couleur du texte de la console à gris foncé
         printf("\n");
