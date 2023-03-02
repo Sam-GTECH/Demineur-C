@@ -202,6 +202,11 @@ int main()
                 printf("Une des valeurs donnees n'est pas valide!\n\n"); // afficher erreur
                 verif = 0;
             }
+            else if (Jeu[selectRow-1][selectCol-1] != '*')
+            {
+                printf("La case %d-%d a déjà été déminée!\n\n", selectRow, selectCol);
+                verif = 0;
+            }
         }
 
         selectRow -= 1;
