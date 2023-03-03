@@ -3,6 +3,7 @@
 #include "wchar.h"
 #include "stdlib.h"
 #include "Windows.h"
+#include "conio.h"
 
 char matrice[10][10]; // matrice "admin" avec les bombes affichées
 char Jeu[10][10];     // matrice joueur " bombes caché"
@@ -38,7 +39,7 @@ void randomBomb(int refused[9][2])
 }
 
 // Affiche la grille de jeu
-void showJeu()
+void showJeu(int x, int y)
 {
     printf("\033[90m"); // Change la couleur du texte de la console à gris foncé
     printf("  | 1  2  3  4  5  6  7  8  9  10\n");
@@ -74,6 +75,8 @@ void showJeu()
                 printf("\033[7m");
             else
                 printf("\033[0m");
+            if (row==y && columns==x)
+                printf("\033[7m");
             printf("%c\033[0m  ", Jeu[row][columns]); // affiche la grille de jeu
         }
         printf("\033[90m"); // Change la couleur du texte de la console à gris foncé
@@ -181,113 +184,115 @@ int main()
     printf("--- DEMINEUR C ---\n");
     printf("\n");
     printf("Bienvenue! Appuyez sur n'importe quel touche pour commencer une partie de démineur\n");
+    printf("\n\033[4mContrôles:\033[24m\nEntrée/Espace: déminer une case\nF: Poser/Enlever un drapeau\nFlèches directionnelles: bouger le pointeur dans la grille\n");
     getchar();
 
     int selectRow, selectCol;
-    int verif = 0;
     int action = -1;
-    int choix = 0;
     int countVictory = 0; // Compteur de case vide pour condition de victoire
+
+    //Variables du pointer
+    int posX = 4;
+    int posY = 4;
+    int canMove = 1;
 
     while (1) // Commencement du jeu
     {
         system("cls"); //nettoyage du terminale
-        showJeu(); // affiche la grille du joueur
+        showJeu(posX, posY); // affiche la grille du joueur
         //showMatrix(); // affiche la grille admin
-        while (verif == 0)
-        {
-            printf("Sélectionnez le numéro de la ligne et de la colonne que vous voulez modifier: ");
-            verif = scanf_s("%d %d", &selectRow, &selectCol);
 
-            if (verif < 2 || Jeu[selectRow - 1][selectCol - 1] < 11 || Jeu[selectCol - 1][selectRow - 1] < 11) // Si la valeur n'est pas entre 1 et 10 
-            {
-                scanf_s("%*[^\n]"); // Vide le buffer si la valeur n'est pas un integer
-                printf("Une des valeurs données n'est pas valide!\n\n"); // afficher erreur
-                verif = 0;
-            }
-            else if (Jeu[selectRow-1][selectCol-1] != '*')
-            {
-                printf("La case %d-%d a déjà été déminée!\n\n", selectRow, selectCol);
-                verif = 0;
-            }
+        if (countVictory == 90) // Si toute les cases sans bombes sont révélé
+        {
+            printf("Bravo vous avez réussi!\n"); // Afficher Bravo !
+            break;
         }
 
-        selectRow -= 1;
-        selectCol -= 1;
+        while (1){
+            if (_kbhit()){
+                int key = _getch();
+                switch (key)
+                {
+                    //Déplacement
+                    case 72: // Flèche haut
+                        posY-=1;
+                        break;
+                    case 80: // Flèche bas
+                        posY+=1;
+                        break;
+                    case 75: // Flèche gauche
+                        posX-=1;
+                        break;
+                    case 77: // Flèche droite
+                        posX+=1;
+                        break;
 
-        printf("Case (%d-%d) sélectionnée.\n\n", selectRow + 1, selectCol + 1); // Affiche les coordonées de la case séléctionné
-        while (action == -1)
-        {
-            if (Jeu[selectRow][selectCol] == 'P') // si il y a un drapeau
-            {
-                printf("Que faire?\n1-Enlever un drapeau\n2-Changer de case\nChoix:");
-                scanf_s("%d", &action);
-                if (action == 1) // supprimer le drapeau posé si il y a un drapeau
-                {
-                    Jeu[selectRow][selectCol] = '*';
+                    //Actions
+                    case 13:
+                    case 32: //Entrée ou Espace: démine une case
+                        action = 1;
+                        break;
+                    case 102:
+                    case 70: //F (minuscule et majuscule because why not?): pose/retire un drapeau
+                        action = 2;
+                        break;
+                    default:
+                        break;
                 }
-                else
-                {
-                    verif = 0; // renvoie au choix d'une case
-                }
-            }
-            else if (Jeu[selectRow][selectCol] != 'P') // Si il n'y a pas de drapeau
-            {
-                printf("Que faire?\n1-Déminer\n2-Poser un drapeau\n3-Changer de case\nChoix:"); // Choix 1 déminer, 2 Poser un drapeau et 3 Changer de case
-                scanf_s("%d", &action);
-                if (action == 1) // si choix est 1 déminer
-                {
-                    if (firstTry==1) { // Si c'est le premier coup du joueur, on met en place les bombes
-                        int refusedCases[9][2] = {
-                            {selectRow, selectCol},
-                            {selectRow   , selectCol-1}, //top
-                            {selectRow+1 , selectCol-1}, //top right
-                            {selectRow+1 , selectCol  }, //right
-                            {selectRow+1 , selectCol+1}, //bottom right
-                            {selectRow   , selectCol+1}, //bottom
-                            {selectRow-1 , selectCol+1}, //bottom left
-                            {selectRow-1 , selectCol  }, //left
-                            {selectRow-1 , selectCol-1}, //top left
-                        };
-                        randomBomb(refusedCases);
-                        firstTry = 0;
-                    }
-                    revealCasesAround(selectRow, selectCol, &countVictory);
-                }
-                else if (action == 2) // si choix est 2 poser drapeau
-                {
-                    Jeu[selectRow][selectCol] = 'P'; // Place le drapeau
-                }
-                else if (action == 3)
-                {
-                    verif = 0; // renvoie a choix de la case
-                }
-            }
 
-            if (action < 1 || action > 3) // Si action n'est pas 1, 2 ou 3 
-            {
-                printf("%d n'est pas un choix valide.\n\n", action); // Afficher erreur
-                action = -1; // renvoi au choix 1, 2 ou 3
-            }
-        }
-
-        if (action == 1) // Si l'action est 1
-        {
-            if (matrice[selectRow][selectCol] == 'X') // Si la case déminer est une bombe
-            {
-                printf("\033[31m"); // Change la couleur du texte de la console à rouge
-                printf("BOOM!\nIl y avait une bombe, c'est perdu!\n"); // Afficher Perdu !
-                showMatrix();
-                break;
-            }
-            else if (countVictory == 90) // Si toute les cases sans bombes sont révélé
-            {
-                printf("Bravo vous avez réussi"); // Afficher Bravo !
-                printf("\n");
+                if (posX<0)
+                    posX = 0;
+                else if (posX>9)
+                    posX = 9;
+                if (posY<0)
+                    posY = 0;
+                else if (posY>9)
+                    posY = 9;
                 break;
             }
         }
-        verif = 0;
+
+        selectRow = posY;
+        selectCol = posX;
+
+        if (Jeu[selectRow][selectCol]!='*' && Jeu[selectRow][selectCol]!='P'){
+            action = -1;
+        }
+
+        if (action == 1) {
+            if (Jeu[selectRow][selectCol] != 'P') {
+                if (firstTry==1) { // Si c'est le premier coup du joueur, on met en place les bombes
+                    int refusedCases[9][2] = {
+                        {selectRow, selectCol},
+                        {selectRow   , selectCol-1}, //top
+                        {selectRow+1 , selectCol-1}, //top right
+                        {selectRow+1 , selectCol  }, //right
+                        {selectRow+1 , selectCol+1}, //bottom right
+                        {selectRow   , selectCol+1}, //bottom
+                        {selectRow-1 , selectCol+1}, //bottom left
+                        {selectRow-1 , selectCol  }, //left
+                        {selectRow-1 , selectCol-1}, //top left
+                    };
+                    randomBomb(refusedCases);
+                    firstTry = 0;
+                }
+                if (matrice[selectRow][selectCol] == 'X') {
+                    printf("\033[31m"); // Change la couleur du texte de la console à rouge
+                    printf("BOOM!\nIl y avait une bombe, c'est perdu!\n"); // Afficher Perdu !
+                    showMatrix();
+                    break;
+                }
+                revealCasesAround(selectRow, selectCol, &countVictory);
+            }
+        } else if (action == 2) {
+            if (Jeu[selectRow][selectCol] == 'P'){
+                Jeu[selectRow][selectCol] = '*';
+            }
+            else if (Jeu[selectRow][selectCol] == '*') { // si il y a un 
+                Jeu[selectRow][selectCol] = 'P'; // Place le drapeau
+            }
+        }
+
         selectRow = 0;
         selectCol = 0;
         action = -1;
