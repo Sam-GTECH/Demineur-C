@@ -203,7 +203,6 @@ int main()
         system("cls"); //nettoyage du terminale
         showJeu(posX, posY); // affiche la grille du joueur
         //showMatrix(); // affiche la grille admin
-        printf("[countVictory: %i]", countVictory);
 
         if (countVictory == 90) // Si toute les cases sans bombes sont révélé
         {
