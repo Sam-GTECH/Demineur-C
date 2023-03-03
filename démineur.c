@@ -162,6 +162,8 @@ int main()
     SetConsoleCP(65001);
     SetConsoleOutputCP(65001);
 
+    SetConsoleTitle("Démineur C");
+
     int firstTry = 1; // Détermine si c'est le premier coup du joueur ou pas
 
     int row, columns;  // lignes et colonnes
