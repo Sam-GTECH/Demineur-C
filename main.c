@@ -6,9 +6,6 @@
 
 char matrice[10][10]; // matrice "admin" avec les bombes affichées
 char Jeu[10][10];     // matrice joueur " bombes caché"
-int row, columns;  // lignes et colonnes
-int b;
-int countVictory; // Compteur de case vide pour condition de victoire
 
 // générateur de 10 bombes de manières aléatoire
 // @param refused Une table qui donne la position des 9 cases sur lesquelles aucune bombe ne doit être placée
@@ -22,7 +19,7 @@ void randomBomb(int refused[9][2])
         // On pose temp. une bombe sur la case du joueur et autour pour que la boucle while après empêche une vraie bombe d'être placée sur ces cases.
         matrice[refused[i][0]][refused[i][1]] = 'X';
     }
-    for (b = 0; b < 10; b++)
+    for (i = 0; i < 10; i++)
     {
         randomR = rand() % 10;
         randomC = rand() % 10;
@@ -47,6 +44,7 @@ void showJeu()
     printf("  | 1  2  3  4  5  6  7  8  9  10\n");
     printf("  --------------------------------\n");
 
+    int row, columns;  // lignes et colonnes
     for (row = 0; row < 10; row++) // boucle pour les lignes
     {
         if (row < 9) // si ligne < 9 alors écrire " | " et sauté une ligne
@@ -92,6 +90,7 @@ void showMatrix()
     printf("  | 1  2  3  4  5  6  7  8  9  10\n");
     printf("  --------------------------------\n");
 
+    int row, columns;  // lignes et colonnes
     for (row = 0; row < 10; row++)
     {
         if (row < 9)
@@ -110,7 +109,7 @@ void showMatrix()
 // Révèle une case et ses alentours
 // @param r la rangée de la matrice où est la case
 // @param c la colonne de la matrice où est la case
-void revealCasesAround(int r, int c)
+void revealCasesAround(int r, int c, int *countVictory)
 {
     if (r < 0 || r > 9 || c < 0 || c > 9) // Si la case est en dehors de la grille, on ne vérifie pas
         return;
@@ -130,7 +129,7 @@ void revealCasesAround(int r, int c)
 
     int i;
     int bombFound = 0; // Le nombre de bombes trouvés autour de la case concernée
-    countVictory++; // ajoute 1 au compteur de victoire à chaque révélation
+    *countVictory+=1; // ajoute 1 au compteur de victoire à chaque révélation
     for (i = 0; i < 8; i++)
     {
         if (aroundCases[i][0] < 0 || aroundCases[i][0] > 9 || aroundCases[i][1] < 0 || aroundCases[i][1] > 9) // Si c'est hors-limite, on passe
@@ -146,7 +145,7 @@ void revealCasesAround(int r, int c)
         Jeu[r][c] = matrice[r][c];
         for (i = 0; i < 8; i++)
         {
-            revealCasesAround(aroundCases[i][0], aroundCases[i][1]); // Révèle les cases autours du déminage
+            revealCasesAround(aroundCases[i][0], aroundCases[i][1], *&countVictory); // Révèle les cases autours du déminage
         }
     }
     else
@@ -162,6 +161,7 @@ int main()
 
     int firstTry = 1; // Détermine si c'est le premier coup du joueur ou pas
 
+    int row, columns;  // lignes et colonnes
     for (row = 0; row < 10; row++)
     {
         for (columns = 0; columns < 10; columns++)
@@ -187,6 +187,7 @@ int main()
     int verif = 0;
     int action = -1;
     int choix = 0;
+    int countVictory = 0; // Compteur de case vide pour condition de victoire
 
     while (1) // Commencement du jeu
     {
@@ -251,7 +252,7 @@ int main()
                         randomBomb(refusedCases);
                         firstTry = 0;
                     }
-                    revealCasesAround(selectRow, selectCol);
+                    revealCasesAround(selectRow, selectCol, &countVictory);
                 }
                 else if (action == 2) // si choix est 2 poser drapeau
                 {
